@@ -18,3 +18,7 @@ use Illuminate\Support\Facades\Route;
 // Authentication routes
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('/auth/get-auth', [AuthController::class, 'getAuth']);
+});
