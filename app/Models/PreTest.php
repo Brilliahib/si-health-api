@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class PreTest extends BaseModel
+{
+    use HasFactory;
+
+    public function questionSet()
+    {
+        return $this->morphOne(QuestionSet::class, 'testable');
+    }
+
+    public function module()
+    {
+        return $this->belongsTo(Module::class);
+    }
+}
