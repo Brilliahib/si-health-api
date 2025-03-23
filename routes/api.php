@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CAPDController;
+use App\Http\Controllers\HDController;
 use App\Http\Controllers\ModuleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/capds', [CAPDController::class, 'index']);
     Route::get('/capds/{id}', [CAPDController::class, 'show']);
 
+    // HD public routes (read access)
+    Route::get('/hds', [HDController::class, 'index']);
+    Route::get('/hds/{id}', [HDController::class, 'show']);
+
     Route::middleware(['role:admin'])->group(function () {
         // Module admin routes
         Route::post('/modules', [ModuleController::class, 'store']);
@@ -42,5 +47,10 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/capds', [CAPDController::class, 'store']);
         Route::put('/capds/{id}', [CAPDController::class, 'update']);
         Route::delete('/capds/{id}', [CAPDController::class, 'destroy']);
+
+        // HD admin routes
+        Route::post('/hds', [HDController::class, 'store']);
+        Route::put('/hds/{id}', [HDController::class, 'update']);
+        Route::delete('/hds/{id}', [HDController::class, 'destroy']);
     });
 });
