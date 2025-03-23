@@ -27,6 +27,7 @@ class CAPDController extends Controller
         $request->validate([
             'module_id' => 'required|uuid',
             'video_url' => 'required|string',
+            'name' => 'required|string',
             'content' => 'required|string',
         ]);
 
@@ -34,6 +35,7 @@ class CAPDController extends Controller
             'id' => Str::uuid(),
             'module_id' => $request->module_id,
             'video_url' => $request->video_url,
+            'name' => $request->name,
             'content' => $request->content,
         ]);
 
@@ -87,7 +89,7 @@ class CAPDController extends Controller
             ], 404);
         }
 
-        $capd->update($request->only(['video_url', 'content', 'module_id']));
+        $capd->update($request->only(['video_url', 'content', 'module_id', 'name']));
 
         return response()->json([
             'meta' => [

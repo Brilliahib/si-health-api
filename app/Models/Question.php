@@ -13,4 +13,9 @@ class Question extends BaseModel
     {
         return $this->belongsTo(QuestionSet::class);
     }
+
+    public function options()
+    {
+        return $this->hasMany(Option::class);
+    }
 }

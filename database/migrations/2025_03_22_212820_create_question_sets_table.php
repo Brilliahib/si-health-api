@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('question_sets', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->morphs('testable');
+            $table->string('name');
             $table->timestamps();
         });
     }

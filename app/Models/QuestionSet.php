@@ -9,9 +9,14 @@ class QuestionSet extends BaseModel
 {
     use HasFactory;
 
-    public function testable()
+    public function preTests()
     {
-        return $this->morphTo();
+        return $this->hasMany(PreTest::class);
+    }
+
+    public function postTests()
+    {
+        return $this->hasMany(PostTest::class);
     }
 
     public function questions()

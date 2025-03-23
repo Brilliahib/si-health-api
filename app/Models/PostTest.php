@@ -11,7 +11,7 @@ class PostTest extends BaseModel
 
     public function questionSet()
     {
-        return $this->morphOne(QuestionSet::class, 'testable');
+        return $this->belongsTo(QuestionSet::class);
     }
 
     public function module()

@@ -75,8 +75,10 @@ class ModuleController extends Controller
                 'statusCode' => 200,
             ],
             'data' => [
-                'module' => $module->makeHidden(['capds', 'hds']),
+                'module' => $module->makeHidden(['capds', 'hds', 'preTests', 'postTests']),
+                'pre_test' => $module->preTests,
                 'sub_modules' => $details,
+                'post_test' => $module->postTests,
             ],
         ]);
     }
