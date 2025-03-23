@@ -4,6 +4,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CAPDController;
 use App\Http\Controllers\HDController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\PostTestController;
+use App\Http\Controllers\PreTestController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionSetController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +41,22 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/hds', [HDController::class, 'index']);
     Route::get('/hds/{id}', [HDController::class, 'show']);
 
+    // Pre Test public routes (read access)
+    Route::get('/pre-test', [PreTestController::class, 'index']);
+    Route::get('/pre-test/{id}', [PreTestController::class, 'show']);
+
+    // Post Test public routes (read access)
+    Route::get('/post-test', [PostTestController::class, 'index']);
+    Route::get('/post-test/{id}', [PostTestController::class, 'show']);
+
+    // Question Set public routes (read access)
+    Route::get('/question-set', [QuestionSetController::class, 'index']);
+    Route::get('/question-set/{id}', [QuestionSetController::class, 'show']);
+
+    // Question public routes (read access)
+    Route::get('/question', [QuestionController::class, 'index']);
+    Route::get('/question/{id}', [QuestionController::class, 'show']);
+
     Route::middleware(['role:admin'])->group(function () {
         // Module admin routes
         Route::post('/modules', [ModuleController::class, 'store']);
@@ -52,5 +72,25 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/hds', [HDController::class, 'store']);
         Route::put('/hds/{id}', [HDController::class, 'update']);
         Route::delete('/hds/{id}', [HDController::class, 'destroy']);
+
+        // Pre Test admin routes
+        Route::post('/pre-test', [PreTestController::class, 'store']);
+        Route::put('/pre-test/{id}', [PreTestController::class, 'update']);
+        Route::delete('/pre-test/{id}', [PreTestController::class, 'destroy']);
+
+        // Post Test admin routes
+        Route::post('/post-test', [PostTestController::class, 'store']);
+        Route::put('/post-test/{id}', [PostTestController::class, 'update']);
+        Route::delete('/post-test/{id}', [PostTestController::class, 'destroy']);
+
+        // Question Set admin routes
+        Route::post('/question-set', [QuestionSetController::class, 'store']);
+        Route::put('/question-set/{id}', [QuestionSetController::class, 'update']);
+        Route::delete('/question-set/{id}', [QuestionSetController::class, 'destroy']);
+
+        // Question admin routes
+        Route::post('/question', [QuestionController::class, 'store']);
+        Route::put('/question/{id}', [QuestionController::class, 'update']);
+        Route::delete('/question/{id}', [QuestionController::class, 'destroy']);
     });
 });
