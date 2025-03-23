@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CAPD extends BaseModel
 {
     use HasFactory;
+    protected $table = 'capds';
 
     public function module()
     {
