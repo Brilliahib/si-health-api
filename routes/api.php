@@ -8,6 +8,7 @@ use App\Http\Controllers\PostTestController;
 use App\Http\Controllers\PreTestController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionSetController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -92,5 +93,8 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/question', [QuestionController::class, 'store']);
         Route::put('/question/{id}', [QuestionController::class, 'update']);
         Route::delete('/question/{id}', [QuestionController::class, 'destroy']);
+
+        // Users admin routes
+        Route::apiResource('users', UserController::class);
     });
 });

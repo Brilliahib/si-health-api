@@ -11,7 +11,7 @@ class PreTestController extends Controller
 {
     public function index()
     {
-        $preTests = PreTest::all();
+        $preTests = PreTest::with('module')->get();
 
         return response()->json([
             'meta' => ['status' => 'success'],
