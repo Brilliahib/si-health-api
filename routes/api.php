@@ -8,6 +8,7 @@ use App\Http\Controllers\PostTestController;
 use App\Http\Controllers\PreTestController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionSetController;
+use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/hds', [HDController::class, 'index']);
     Route::get('/hds/{id}', [HDController::class, 'show']);
 
+    // Screening public routes (read access)
+    Route::get('/screening', [ScreeningController::class, 'index']);
+    Route::get('/screening/{id}', [ScreeningController::class, 'show']);
+
     // Pre Test public routes (read access)
     Route::get('/pre-test', [PreTestController::class, 'index']);
     Route::get('/pre-test/{id}', [PreTestController::class, 'show']);
@@ -73,6 +78,11 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/hds', [HDController::class, 'store']);
         Route::put('/hds/{id}', [HDController::class, 'update']);
         Route::delete('/hds/{id}', [HDController::class, 'destroy']);
+
+        // Screening admin routes
+        Route::post('/screening', [ScreeningController::class, 'store']);
+        Route::put('/screening/{id}', [ScreeningController::class, 'update']);
+        Route::delete('/screening/{id}', [ScreeningController::class, 'destroy']);
 
         // Pre Test admin routes
         Route::post('/pre-test', [PreTestController::class, 'store']);

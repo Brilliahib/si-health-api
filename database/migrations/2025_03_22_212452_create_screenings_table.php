@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('screenings', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('question_set_id');
+            $table->string('name');
             $table->timestamps();
         });
     }
