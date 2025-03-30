@@ -9,7 +9,10 @@ use App\Http\Controllers\PreTestController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionSetController;
 use App\Http\Controllers\ScreeningController;
+use App\Http\Controllers\UserAnswerScreeningController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserHistoryScreeningController;
+use App\Models\UserHistoryScreening;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,9 +46,16 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/hds', [HDController::class, 'index']);
     Route::get('/hds/{id}', [HDController::class, 'show']);
 
+    // History screening public routes (read access)
+    Route::get('/screening/history', [UserHistoryScreeningController::class, 'index']);
+    Route::get('/screening/history/{id}', [UserHistoryScreeningController::class, 'show']);
+
     // Screening public routes (read access)
     Route::get('/screening', [ScreeningController::class, 'index']);
     Route::get('/screening/{id}', [ScreeningController::class, 'show']);
+
+    // Submit screening routes
+    Route::post('/screening/submit', [UserAnswerScreeningController::class, 'submit']);
 
     // Pre Test public routes (read access)
     Route::get('/pre-test', [PreTestController::class, 'index']);

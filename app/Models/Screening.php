@@ -13,4 +13,9 @@ class Screening extends BaseModel
     {
         return $this->belongsTo(QuestionSet::class);
     }
+
+    public function userHistories()
+    {
+        return $this->hasMany(UserHistoryScreening::class);
+    }
 }

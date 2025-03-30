@@ -13,4 +13,9 @@ class Option extends BaseModel
     {
         return $this->belongsTo(Question::class);
     }
+
+    public function userAnswerScreening()
+    {
+        return $this->hasMany(UserAnswerScreening::class, 'selected_option_id');
+    }
 }

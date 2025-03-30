@@ -18,4 +18,9 @@ class Question extends BaseModel
     {
         return $this->hasMany(Option::class);
     }
+
+    public function userAnswerScreening()
+    {
+        return $this->hasMany(UserAnswerScreening::class, 'question_id');
+    }
 }
