@@ -22,14 +22,29 @@ class UserAnswerPreTestController extends Controller
         $user = auth()->user();
 
         try {
-            // 1. Save user history pre test
+            // Ambil semua selected_option_id yang tidak null
+            $selectedOptionIds = collect($request->answers)
+                ->pluck('selected_option_id')
+                ->filter()
+                ->unique();
+
+            // Ambil semua options sekaligus, di-index berdasarkan ID untuk lookup cepat
+            $options = \App\Models\Option::whereIn('id', $selectedOptionIds)
+                ->get()
+                ->keyBy('id');
+
+            // Buat history awal dengan skor 0, akan di-update nanti
             $history = UserHistoryPreTest::create([
                 'user_id' => $user->id,
                 'pre_test_id' => $request->pre_test_id,
+                'average_score' => 0, // placeholder
             ]);
 
-            // 2. Save a all answer to user answer pre test
+            $totalScore = 0;
+            $answeredCount = 0;
+
             foreach ($request->answers as $answer) {
+                // Simpan jawaban user
                 UserAnswerPreTest::create([
                     'user_id' => $user->id,
                     'user_history_pre_test_id' => $history->id,
@@ -38,16 +53,32 @@ class UserAnswerPreTestController extends Controller
                     'answer_text' => $answer['answer_text'] ?? null,
                     'answered_at' => now(),
                 ]);
+
+                // Hitung skor jika option ditemukan
+                $selectedOptionId = $answer['selected_option_id'] ?? null;
+                if ($selectedOptionId && $options->has($selectedOptionId)) {
+                    $totalScore += $options[$selectedOptionId]->score ?? 0;
+                    $answeredCount++;
+                }
             }
 
+            // Hitung rata-rata
+            $averageScore = $answeredCount > 0 ? (int) round($totalScore / $answeredCount) : 0;
+
+            // Update skor rata-rata ke history
+            $history->update([
+                'average_score' => $averageScore
+            ]);
+
             return response()->json([
-                'message' => 'Pre test submited successfully',
+                'message' => 'Pre test submitted successfully',
                 'history_id' => $history->id,
+                'average_score' => $averageScore,
             ], 201);
         } catch (\Throwable $e) {
             Log::error('Submit pre test error: ' . $e->getMessage());
             return response()->json([
-                'message' => 'Terjadi kesalahan',
+                'message' => 'Terjadi kesalahan saat submit pre-test',
                 'error' => $e->getMessage()
             ], 500);
         }

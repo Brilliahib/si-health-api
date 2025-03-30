@@ -62,7 +62,6 @@ class PreTestController extends Controller
                 'id' => $question->id,
                 'type' => $question->type,
                 'question_text' => $question->question_text,
-                'answer_key' => $question->answer_key,
             ];
 
             if ($question->type === 'multiple_choice') {

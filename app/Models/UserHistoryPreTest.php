@@ -20,6 +20,6 @@ class UserHistoryPreTest extends BaseModel
 
     public function answer()
     {
-        return $this->hasMany(UserAnswerScreening::class);
+        return $this->hasMany(UserAnswerPreTest::class);
     }
 }

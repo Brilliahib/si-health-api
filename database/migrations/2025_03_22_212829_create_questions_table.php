@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->foreignUuid('question_set_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['multiple_choice', 'essay']);
             $table->text('question_text');
-            $table->text('answer_key')->nullable();
             $table->timestamps();
         });
     }

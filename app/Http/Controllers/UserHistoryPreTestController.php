@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserHistoryPreTest;
-use Illuminate\Http\Request;
 
 class UserHistoryPreTestController extends Controller
 {
@@ -42,11 +41,14 @@ class UserHistoryPreTestController extends Controller
                 'created_at' => $history->created_at,
                 'answer' => $history->answer->map(function ($answer) {
                     return [
+                        'id' => $answer->question->id,
                         'question' => $answer->question->question_text,
                         'options' => $answer->question->options->map(fn($opt) => [
+                            'id' => $opt->id,
                             'text' => $opt->option_text,
                         ]),
                         'selected_option' => [
+                            'id' => $answer->selectedOption?->id,
                             'text' => $answer->selectedOption?->option_text,
                         ],
                     ];
