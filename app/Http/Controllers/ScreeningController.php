@@ -65,7 +65,6 @@ class ScreeningController extends Controller
                         return [
                             'id' => $option->id,
                             'option_text' => $option->option_text,
-                            'is_correct' => $option->is_correct,
                         ];
                     })
                     : [],

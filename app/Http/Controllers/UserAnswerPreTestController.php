@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserAnswerScreening;
-use App\Models\UserHistoryScreening;
+use App\Models\UserAnswerPreTest;
+use App\Models\UserHistoryPreTest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class UserAnswerScreeningController extends Controller
+class UserAnswerPreTestController extends Controller
 {
     public function submit(Request $request)
     {
         $request->validate([
-            'screening_id' => 'required|uuid',
+            'pre_test_id' => 'required|uuid',
             'answers' => 'required|array|min:1',
             'answers.*.selected_option_id' => 'nullable|uuid|exists:options,id',
             'answers.*.question_id' => 'nullable|uuid|exists:questions,id',
@@ -22,17 +22,17 @@ class UserAnswerScreeningController extends Controller
         $user = auth()->user();
 
         try {
-            // 1. Save user history screening
-            $history = UserHistoryScreening::create([
+            // 1. Save user history pre test
+            $history = UserHistoryPreTest::create([
                 'user_id' => $user->id,
-                'screening_id' => $request->screening_id,
+                'pre_test_id' => $request->pre_test_id,
             ]);
 
-            // 2. Save a all answer to user answer screening
+            // 2. Save a all answer to user answer pre test
             foreach ($request->answers as $answer) {
-                UserAnswerScreening::create([
+                UserAnswerPreTest::create([
                     'user_id' => $user->id,
-                    'user_history_screening_id' => $history->id,
+                    'user_history_pre_test_id' => $history->id,
                     'selected_option_id' => $answer['selected_option_id'] ?? null,
                     'question_id' => $answer['question_id'],
                     'answer_text' => $answer['answer_text'] ?? null,
@@ -41,11 +41,11 @@ class UserAnswerScreeningController extends Controller
             }
 
             return response()->json([
-                'message' => 'Screening berhasil disubmit',
+                'message' => 'Pre test submited successfully',
                 'history_id' => $history->id,
             ], 201);
         } catch (\Throwable $e) {
-            Log::error('Submit screening error: ' . $e->getMessage());
+            Log::error('Submit pre test error: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Terjadi kesalahan',
                 'error' => $e->getMessage()

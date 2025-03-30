@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('user_history_post_tests', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('post_test_id')->constrained()->onDelete('cascade');
+            $table->integer('average_score');
             $table->timestamps();
         });
     }

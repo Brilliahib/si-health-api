@@ -35,7 +35,6 @@ class QuestionController extends Controller
                     Option::create([
                         'question_id' => $question->id,
                         'option_text' => $opt['option_text'],
-                        'is_correct' => $opt['is_correct'] ?? false,
                         'score' => $opt['score'] ?? null,
                     ]);
                 }

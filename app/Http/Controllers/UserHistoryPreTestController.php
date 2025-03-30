@@ -2,9 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserHistoryPreTest;
 use Illuminate\Http\Request;
 
 class UserHistoryPreTestController extends Controller
 {
-    //
+    public function index()
+    {
+        $user = auth()->user();
+
+        $histories = UserHistoryPreTest::with('preTest')
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'message' => 'Berhasil mengambil semua history pre test',
+            'data' => $histories,
+        ]);
+    }
+
+    public function show($id)
+    {
+
+        $history = UserHistoryPreTest::with(['answer.question.options', 'answer.selectedOption',])
+            ->where('id', $id)
+            ->first();
+
+        if (!$history) {
+            return response()->json([
+                'message' => 'History pre test tidak ditemukan',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Berhasil mengambil detail history pre test',
+            'data' => [
+                'id' => $history->id,
+                'created_at' => $history->created_at,
+                'answer' => $history->answer->map(function ($answer) {
+                    return [
+                        'question' => $answer->question->question_text,
+                        'options' => $answer->question->options->map(fn($opt) => [
+                            'text' => $opt->option_text,
+                        ]),
+                        'selected_option' => [
+                            'text' => $answer->selectedOption?->option_text,
+                        ],
+                    ];
+                }),
+            ],
+        ]);
+    }
 }
