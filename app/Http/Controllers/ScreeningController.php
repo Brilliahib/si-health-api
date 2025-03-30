@@ -54,11 +54,22 @@ class ScreeningController extends Controller
     {
         $screening = Screening::with('questionSet.questions.options')->findOrFail($id);
 
-        $screening->questionSet->questions->transform(function ($question) {
-            if ($question->type !== 'multiple_choice') {
-                unset($question->options);
-            }
-            return $question;
+        $questions = $screening->questionSet->questions->map(function ($question) {
+            return [
+                'id' => $question->id,
+                'type' => $question->type,
+                'question_text' => $question->question_text,
+                'answer_key' => $question->answer_key,
+                'options' => $question->type === 'multiple_choice'
+                    ? $question->options->map(function ($option) {
+                        return [
+                            'id' => $option->id,
+                            'option_text' => $option->option_text,
+                            'is_correct' => $option->is_correct,
+                        ];
+                    })
+                    : [],
+            ];
         });
 
         return response()->json([
@@ -67,9 +78,14 @@ class ScreeningController extends Controller
                 'message' => 'Screening fetched successfully',
                 'statusCode' => 200,
             ],
-            'data' => $screening,
+            'data' => [
+                'id' => $screening->id,
+                'name' => $screening->name,
+                'questions' => $questions,
+            ],
         ]);
     }
+
 
     public function update(Request $request, $id)
     {

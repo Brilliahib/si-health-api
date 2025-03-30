@@ -18,7 +18,7 @@ class UserAnswerScreening extends BaseModel
         return $this->belongsTo(Option::class, 'selected_option_id');
     }
 
-    public function questionAnswer()
+    public function question()
     {
         return $this->belongsTo(Question::class, 'question_id');
     }

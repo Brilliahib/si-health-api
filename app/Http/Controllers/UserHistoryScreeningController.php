@@ -24,10 +24,8 @@ class UserHistoryScreeningController extends Controller
 
     public function show($id)
     {
-        $user = auth()->user();
 
-        $history = UserHistoryScreening::with(['userAnswerScreenings', 'userAnswerScreenings.questionAnswer.options', 'userAnswerScreenings.selectedOption',])
-            ->where('user_id', $user->id)
+        $history = UserHistoryScreening::with(['answer.question.options', 'answer.selectedOption',])
             ->where('id', $id)
             ->first();
 
@@ -39,7 +37,23 @@ class UserHistoryScreeningController extends Controller
 
         return response()->json([
             'message' => 'Berhasil mengambil detail history screening',
-            'data' => $history,
+            'data' => [
+                'id' => $history->id,
+                'created_at' => $history->created_at,
+                'answer' => $history->answer->map(function ($answer) {
+                    return [
+                        'question' => $answer->question->question_text,
+                        'options' => $answer->question->options->map(fn($opt) => [
+                            'text' => $opt->option_text,
+                            'is_correct' => $opt->is_correct,
+                        ]),
+                        'selected_option' => [
+                            'text' => $answer->selectedOption?->option_text,
+                            'is_correct' => $answer->selectedOption?->is_correct,
+                        ],
+                    ];
+                }),
+            ],
         ]);
     }
 }

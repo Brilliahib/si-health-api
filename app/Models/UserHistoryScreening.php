@@ -18,7 +18,7 @@ class UserHistoryScreening extends BaseModel
         return $this->belongsTo(Screening::class);
     }
 
-    public function userAnswerScreenings()
+    public function answer()
     {
         return $this->hasMany(UserAnswerScreening::class);
     }
