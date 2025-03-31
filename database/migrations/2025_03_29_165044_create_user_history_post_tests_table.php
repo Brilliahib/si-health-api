@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('screenings', function (Blueprint $table) {
+        Schema::create('user_history_post_tests', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('question_set_id');
-            $table->string('name');
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('post_test_id')->constrained()->onDelete('cascade');
+            $table->integer('sum_score');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('screenings');
+        Schema::dropIfExists('user_history_post_tests');
     }
 };

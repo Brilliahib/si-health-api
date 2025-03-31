@@ -23,4 +23,9 @@ class QuestionSet extends BaseModel
     {
         return $this->hasMany(Question::class);
     }
+
+    public function screenings()
+    {
+        return $this->hasMany(Screening::class);
+    }
 }

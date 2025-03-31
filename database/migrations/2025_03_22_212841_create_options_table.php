@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->foreignUuid('question_id');
             $table->string('option_text');
-            $table->boolean('is_correct')->default(false);
+            $table->integer('score')->nullable();
             $table->timestamps();
         });
     }

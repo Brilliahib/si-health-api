@@ -37,11 +37,21 @@ class QuestionSetController extends Controller
     {
         $set = QuestionSet::with(['questions.options'])->findOrFail($id);
 
-        $set->questions->transform(function ($question) {
-            if ($question->type === 'essay') {
-                unset($question->options);
-            }
-            return $question;
+        $questions = $set->questions->map(function ($question) {
+            return [
+                'id' => $question->id,
+                'type' => $question->type,
+                'question_text' => $question->question_text,
+                'answer_key' => $question->answer_key,
+                'options' => $question->type === 'multiple_choice'
+                    ? $question->options->map(function ($option) {
+                        return [
+                            'id' => $option->id,
+                            'option_text' => $option->option_text,
+                        ];
+                    })
+                    : [],
+            ];
         });
 
         return response()->json([
@@ -50,10 +60,13 @@ class QuestionSetController extends Controller
                 'message' => 'Question Set fetched successfully',
                 'statusCode' => 200,
             ],
-            'data' => $set,
+            'data' => [
+                'id' => $set->id,
+                'name' => $set->name,
+                'questions' => $questions,
+            ],
         ]);
     }
-
 
     public function destroy($id)
     {

@@ -29,13 +29,13 @@ class QuestionController extends Controller
                 'answer_key' => $request->answer_key,
             ]);
 
-            // Jika pilihan ganda, simpan opsi-nya
+            // If multiple choice, save a option
             if ($request->type === 'multiple_choice' && is_array($request->options)) {
                 foreach ($request->options as $opt) {
                     Option::create([
                         'question_id' => $question->id,
                         'option_text' => $opt['option_text'],
-                        'is_correct' => $opt['is_correct'] ?? false,
+                        'score' => $opt['score'] ?? null,
                     ]);
                 }
             }

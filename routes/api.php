@@ -8,6 +8,16 @@ use App\Http\Controllers\PostTestController;
 use App\Http\Controllers\PreTestController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionSetController;
+use App\Http\Controllers\ScreeningController;
+use App\Http\Controllers\UserAnswerPostTestController;
+use App\Http\Controllers\UserAnswerPreTestController;
+use App\Http\Controllers\UserAnswerScreeningController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserHistoryPostTestController;
+use App\Http\Controllers\UserHistoryPreTestController;
+use App\Http\Controllers\UserHistoryScreeningController;
+use App\Models\UserAnswerPreTest;
+use App\Models\UserHistoryScreening;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,13 +51,42 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/hds', [HDController::class, 'index']);
     Route::get('/hds/{id}', [HDController::class, 'show']);
 
+    // History screening public routes (read access)
+    Route::get('/screening/history', [UserHistoryScreeningController::class, 'index']);
+    Route::get('/screening/history/{id}', [UserHistoryScreeningController::class, 'show']);
+
+    // Screening public routes (read access)
+    Route::get('/screening', [ScreeningController::class, 'index']);
+    Route::get('/screening/{id}', [ScreeningController::class, 'show']);
+
+    // Submit screening routes
+    Route::post('/screening/submit', [UserAnswerScreeningController::class, 'submit']);
+
+    // History pre test public routes (read access)
+    Route::get('/pre-test/history', [UserHistoryPreTestController::class, 'index']);
+    Route::get('/pre-test/history/{id}', [UserHistoryPreTestController::class, 'show']);
+
     // Pre Test public routes (read access)
     Route::get('/pre-test', [PreTestController::class, 'index']);
     Route::get('/pre-test/{id}', [PreTestController::class, 'show']);
 
+    // Submit pretest routes
+    Route::post('/pre-test/submit', [UserAnswerPreTestController::class, 'submit']);
+
+    // History post test public routes (read access)
+    Route::get('/post-test/history', [UserHistoryPostTestController::class, 'index']);
+    Route::get('/post-test/history/{id}', [UserHistoryPostTestController::class, 'show']);
+
     // Post Test public routes (read access)
     Route::get('/post-test', [PostTestController::class, 'index']);
     Route::get('/post-test/{id}', [PostTestController::class, 'show']);
+
+    // Post test public routes (read access)
+    Route::get('/post-test', [PostTestController::class, 'index']);
+    Route::get('/post-test/{id}', [PostTestController::class, 'show']);
+
+    // Submit post test routes
+    Route::post('/post-test/submit', [UserAnswerPostTestController::class, 'submit']);
 
     // Question Set public routes (read access)
     Route::get('/question-set', [QuestionSetController::class, 'index']);
@@ -73,6 +112,11 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/hds/{id}', [HDController::class, 'update']);
         Route::delete('/hds/{id}', [HDController::class, 'destroy']);
 
+        // Screening admin routes
+        Route::post('/screening', [ScreeningController::class, 'store']);
+        Route::put('/screening/{id}', [ScreeningController::class, 'update']);
+        Route::delete('/screening/{id}', [ScreeningController::class, 'destroy']);
+
         // Pre Test admin routes
         Route::post('/pre-test', [PreTestController::class, 'store']);
         Route::put('/pre-test/{id}', [PreTestController::class, 'update']);
@@ -92,5 +136,8 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/question', [QuestionController::class, 'store']);
         Route::put('/question/{id}', [QuestionController::class, 'update']);
         Route::delete('/question/{id}', [QuestionController::class, 'destroy']);
+
+        // Users admin routes
+        Route::apiResource('users', UserController::class);
     });
 });

@@ -11,7 +11,7 @@ class PreTestController extends Controller
 {
     public function index()
     {
-        $preTests = PreTest::all();
+        $preTests = PreTest::with('module')->get();
 
         return response()->json([
             'meta' => ['status' => 'success'],
@@ -53,17 +53,35 @@ class PreTestController extends Controller
         }
     }
 
-
     public function show($id)
     {
         $preTest = PreTest::with('questionSet.questions.options')->findOrFail($id);
 
-        $preTest->questionSet->questions->transform(function ($question) {
-            if ($question->type !== 'multiple_choice') {
-                unset($question->options);
+        $questions = $preTest->questionSet->questions->map(function ($question) {
+            $transformed = [
+                'id' => $question->id,
+                'type' => $question->type,
+                'question_text' => $question->question_text,
+            ];
+
+            if ($question->type === 'multiple_choice') {
+                $transformed['options'] = $question->options->map(function ($option) {
+                    return [
+                        'id' => $option->id,
+                        'option_text' => $option->option_text,
+                        'score' => $option->score,
+                    ];
+                });
             }
-            return $question;
+
+            return $transformed;
         });
+
+        $data = [
+            'id' => $preTest->id,
+            'name' => $preTest->name,
+            'questions' => $questions,
+        ];
 
         return response()->json([
             'meta' => [
@@ -71,7 +89,7 @@ class PreTestController extends Controller
                 'message' => 'PreTest fetched successfully',
                 'statusCode' => 200,
             ],
-            'data' => $preTest,
+            'data' => $data,
         ]);
     }
 

@@ -9,7 +9,7 @@ class PostTestController extends Controller
 {
     public function index()
     {
-        $postTests = PostTest::all();
+        $postTests = PostTest::with('module')->get();
 
         return response()->json([
             'meta' => [
@@ -59,12 +59,31 @@ class PostTestController extends Controller
     {
         $postTest = PostTest::with('questionSet.questions.options')->findOrFail($id);
 
-        $postTest->questionSet->questions->transform(function ($question) {
-            if ($question->type !== 'multiple_choice') {
-                unset($question->options);
+        $questions = $postTest->questionSet->questions->map(function ($question) {
+            $transformed = [
+                'id' => $question->id,
+                'type' => $question->type,
+                'question_text' => $question->question_text,
+            ];
+
+            if ($question->type === 'multiple_choice') {
+                $transformed['options'] = $question->options->map(function ($option) {
+                    return [
+                        'id' => $option->id,
+                        'option_text' => $option->option_text,
+                        'score' => $option->score,
+                    ];
+                });
             }
-            return $question;
+
+            return $transformed;
         });
+
+        $data = [
+            'id' => $postTest->id,
+            'name' => $postTest->name,
+            'questions' => $questions,
+        ];
 
         return response()->json([
             'meta' => [
@@ -72,7 +91,7 @@ class PostTestController extends Controller
                 'message' => 'PostTest fetched successfully',
                 'statusCode' => 200,
             ],
-            'data' => $postTest,
+            'data' => $data,
         ]);
     }
 
