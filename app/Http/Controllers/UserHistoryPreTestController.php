@@ -38,6 +38,7 @@ class UserHistoryPreTestController extends Controller
             'message' => 'Berhasil mengambil detail history pre test',
             'data' => [
                 'id' => $history->id,
+                'sum_score' => $history->sum_score,
                 'created_at' => $history->created_at,
                 'answer' => $history->answer->map(function ($answer) {
                     return [

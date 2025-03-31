@@ -9,9 +9,11 @@ use App\Http\Controllers\PreTestController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionSetController;
 use App\Http\Controllers\ScreeningController;
+use App\Http\Controllers\UserAnswerPostTestController;
 use App\Http\Controllers\UserAnswerPreTestController;
 use App\Http\Controllers\UserAnswerScreeningController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserHistoryPostTestController;
 use App\Http\Controllers\UserHistoryPreTestController;
 use App\Http\Controllers\UserHistoryScreeningController;
 use App\Models\UserAnswerPreTest;
@@ -71,9 +73,20 @@ Route::middleware('auth:api')->group(function () {
     // Submit pretest routes
     Route::post('/pre-test/submit', [UserAnswerPreTestController::class, 'submit']);
 
+    // History post test public routes (read access)
+    Route::get('/post-test/history', [UserHistoryPostTestController::class, 'index']);
+    Route::get('/post-test/history/{id}', [UserHistoryPostTestController::class, 'show']);
+
     // Post Test public routes (read access)
     Route::get('/post-test', [PostTestController::class, 'index']);
     Route::get('/post-test/{id}', [PostTestController::class, 'show']);
+
+    // Post test public routes (read access)
+    Route::get('/post-test', [PostTestController::class, 'index']);
+    Route::get('/post-test/{id}', [PostTestController::class, 'show']);
+
+    // Submit post test routes
+    Route::post('/post-test/submit', [UserAnswerPostTestController::class, 'submit']);
 
     // Question Set public routes (read access)
     Route::get('/question-set', [QuestionSetController::class, 'index']);

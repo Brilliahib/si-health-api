@@ -72,4 +72,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(UserHistoryPreTest::class);
     }
+
+    public function historyPostTest()
+    {
+        return $this->hasMany(UserHistoryPostTest::class);
+    }
 }

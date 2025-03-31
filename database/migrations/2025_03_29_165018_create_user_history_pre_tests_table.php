@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('pre_test_id')->constrained()->onDelete('cascade');
-            $table->integer('average_score');
+            $table->integer('sum_score');
             $table->timestamps();
         });
     }

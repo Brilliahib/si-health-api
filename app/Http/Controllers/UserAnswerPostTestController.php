@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserAnswerPreTest;
-use App\Models\UserHistoryPreTest;
+use App\Models\UserAnswerPostTest;
+use App\Models\UserHistoryPostTest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class UserAnswerPreTestController extends Controller
+class UserAnswerPostTestController extends Controller
 {
     public function submit(Request $request)
     {
         $request->validate([
-            'pre_test_id' => 'required|uuid',
+            'post_test_id' => 'required|uuid',
             'answers' => 'required|array|min:1',
             'answers.*.selected_option_id' => 'nullable|uuid|exists:options,id',
             'answers.*.question_id' => 'nullable|uuid|exists:questions,id',
@@ -34,9 +34,9 @@ class UserAnswerPreTestController extends Controller
                 ->keyBy('id');
 
             // Buat history awal dengan skor 0, akan di-update nanti
-            $history = UserHistoryPreTest::create([
+            $history = UserHistoryPostTest::create([
                 'user_id' => $user->id,
-                'pre_test_id' => $request->pre_test_id,
+                'post_test_id' => $request->post_test_id,
                 'sum_score' => 0, // placeholder
             ]);
 
@@ -45,9 +45,9 @@ class UserAnswerPreTestController extends Controller
 
             foreach ($request->answers as $answer) {
                 // Simpan jawaban user
-                UserAnswerPreTest::create([
+                UserAnswerPostTest::create([
                     'user_id' => $user->id,
-                    'user_history_pre_test_id' => $history->id,
+                    'user_history_post_test_id' => $history->id,
                     'selected_option_id' => $answer['selected_option_id'] ?? null,
                     'question_id' => $answer['question_id'],
                     'answer_text' => $answer['answer_text'] ?? null,
@@ -71,14 +71,14 @@ class UserAnswerPreTestController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Pre test submitted successfully',
+                'message' => 'Post Test submitted successfully',
                 'history_id' => $history->id,
                 'sum_score' => $sumScore,
             ], 201);
         } catch (\Throwable $e) {
-            Log::error('Submit pre test error: ' . $e->getMessage());
+            Log::error('Submit Post Test error: ' . $e->getMessage());
             return response()->json([
-                'message' => 'Terjadi kesalahan saat submit pre-test',
+                'message' => 'Terjadi kesalahan saat submit post-test',
                 'error' => $e->getMessage()
             ], 500);
         }
