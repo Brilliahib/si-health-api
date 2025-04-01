@@ -47,10 +47,12 @@ class UserHistoryPreTestController extends Controller
                         'options' => $answer->question->options->map(fn($opt) => [
                             'id' => $opt->id,
                             'text' => $opt->option_text,
+                            'score' => $opt->score,
                         ]),
                         'selected_option' => [
                             'id' => $answer->selectedOption?->id,
                             'text' => $answer->selectedOption?->option_text,
+                            'score' => $answer->selectionOption?->score,
                         ],
                     ];
                 }),
