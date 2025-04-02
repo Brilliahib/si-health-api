@@ -9,8 +9,8 @@ class HD extends BaseModel
     use HasFactory;
     protected $table = 'hds';
 
-    public function module()
+    public function subModule()
     {
-        return $this->belongsTo(Module::class);
+        return $this->belongsTo(SubModule::class);
     }
 }

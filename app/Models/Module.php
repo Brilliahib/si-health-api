@@ -9,23 +9,8 @@ class Module extends BaseModel
 {
     use HasFactory;
 
-    public function HDs()
+    public function subModules()
     {
-        return $this->hasMany(HD::class);
-    }
-
-    public function CAPDs()
-    {
-        return $this->hasMany(CAPD::class);
-    }
-
-    public function postTests()
-    {
-        return $this->hasMany(PostTest::class);
-    }
-
-    public function preTests()
-    {
-        return $this->hasMany(PreTest::class);
+        return $this->hasMany(SubModule::class);
     }
 }

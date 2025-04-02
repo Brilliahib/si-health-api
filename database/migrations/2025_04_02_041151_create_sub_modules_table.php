@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_tests', function (Blueprint $table) {
+        Schema::create('sub_modules', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('sub_module_id');
-            $table->foreignUuid('question_set_id');
+            $table->foreignUuid('module_id');
             $table->string('name');
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('post_tests');
+        Schema::dropIfExists('sub_modules');
     }
 };

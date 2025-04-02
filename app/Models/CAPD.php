@@ -10,8 +10,8 @@ class CAPD extends BaseModel
     use HasFactory;
     protected $table = 'capds';
 
-    public function module()
+    public function subModule()
     {
-        return $this->belongsTo(Module::class);
+        return $this->belongsTo(SubModule::class);
     }
 }

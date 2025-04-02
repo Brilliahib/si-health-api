@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('hds', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('module_id');
+            $table->foreignUuid('sub_module_id');
             $table->string('name');
+            $table->string('video_url');
             $table->string('file_path');
             $table->text('content');
             $table->timestamps();
