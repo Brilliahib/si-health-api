@@ -9,6 +9,7 @@ use App\Http\Controllers\PreTestController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionSetController;
 use App\Http\Controllers\ScreeningController;
+use App\Http\Controllers\SubModuleController;
 use App\Http\Controllers\UserAnswerPostTestController;
 use App\Http\Controllers\UserAnswerPreTestController;
 use App\Http\Controllers\UserAnswerScreeningController;
@@ -43,13 +44,19 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/modules/type', [ModuleController::class, 'getByType']);
     Route::get('/modules/{id}', [ModuleController::class, 'show']);
 
+    Route::get('/sub-modules', [SubModuleController::class, 'index']);
+    Route::get('/sub-modules/{id}', [SubModuleController::class, 'show']);
+    Route::get('/sub-modules/category/{module_id}', [SubModuleController::class, 'getByModule']);
+
     // CAPD public routes (read access)
     Route::get('/capds', [CAPDController::class, 'index']);
     Route::get('/capds/{id}', [CAPDController::class, 'show']);
+    Route::get('/capds/sub-modules/{sub_module_id}', [CAPDController::class, 'getBySubModule']);
 
     // HD public routes (read access)
     Route::get('/hds', [HDController::class, 'index']);
     Route::get('/hds/{id}', [HDController::class, 'show']);
+    Route::get('/hds/sub-modules/{sub_module_id}', [HDController::class, 'getBySubModule']);
 
     // History screening public routes (read access)
     Route::get('/screening/history', [UserHistoryScreeningController::class, 'index']);
@@ -101,6 +108,11 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/modules', [ModuleController::class, 'store']);
         Route::put('/modules/{id}', [ModuleController::class, 'update']);
         Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
+
+        // Sub Module admin routes
+        Route::post('/sub-modules', [SubModuleController::class, 'store']);
+        Route::put('/sub-modules/{id}', [SubModuleController::class, 'update']);
+        Route::delete('/sub-modules/{id}', [SubModuleController::class, 'destroy']);
 
         // CAPD admin routes
         Route::post('/capds', [CAPDController::class, 'store']);

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pre_tests', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('module_id');
+            $table->foreignUuid('sub_module_id');
             $table->foreignUuid('question_set_id');
             $table->string('name');
             $table->timestamps();

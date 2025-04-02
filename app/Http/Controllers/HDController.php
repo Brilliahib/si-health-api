@@ -23,23 +23,39 @@ class HDController extends Controller
         ]);
     }
 
+    public function getBySubModule($sub_module_id)
+    {
+        $hd = HD::where('sub_module_id', $sub_module_id)->get();
+
+        return response()->json([
+            'meta' => [
+                'status' => 'success',
+                'message' => 'HD retrieved successfully for the given sub_module_id',
+                'statusCode' => 200,
+            ],
+            'data' => $hd,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
-            'module_id' => 'required|uuid',
+            'sub_module_id' => 'required|uuid|exists:sub_modules,id',
             'file_path' => 'required|file',
             'name' => 'required|string',
             'content' => 'required|string',
+            'video_url' => 'required|string',
         ]);
 
-        $path = $request->file('file_path')->store('hd_files', 'public');
+        $path = $request->file('file_path')->store('hd_materials', 'public');
 
         $hd = HD::create([
             'id' => Str::uuid(),
-            'module_id' => $request->module_id,
+            'sub_module_id' => $request->sub_module_id,
             'file_path' => $path,
             'name' => $request->name,
             'content' => $request->content,
+            'video_url' => $request->video_url,
         ]);
 
         return response()->json([
@@ -93,10 +109,11 @@ class HDController extends Controller
         }
 
         $request->validate([
-            'module_id' => 'nullable|uuid',
+            'sub_module_id' => 'nullable|uuid',
             'file' => 'nullable|file',
             'name' => 'nullable|string',
             'content' => 'nullable|string',
+            'video_url' => 'nullable|string',
         ]);
 
         if ($request->hasFile('file')) {
@@ -104,12 +121,13 @@ class HDController extends Controller
                 Storage::disk('public')->delete($hd->file_path);
             }
 
-            $hd->file_path = $request->file('file')->store('hd_files', 'public');
+            $hd->file_path = $request->file('file')->store('hd_materials', 'public');
         }
 
-        $hd->module_id = $request->module_id ?? $hd->module_id;
+        $hd->sub_module_id = $request->sub_module_id ?? $hd->sub_module_id;
         $hd->name = $request->name ?? $hd->name;
         $hd->content = $request->content ?? $hd->content;
+        $hd->video_url = $request->video_url ?? $hd->video_url;
 
         $hd->save();
 
