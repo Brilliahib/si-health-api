@@ -13,7 +13,6 @@ return new class extends Migration {
         Schema::create('questions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('question_set_id')->constrained()->onDelete('cascade');
-            $table->enum('type', ['multiple_choice', 'essay']);
             $table->text('question_text');
             $table->timestamps();
         });

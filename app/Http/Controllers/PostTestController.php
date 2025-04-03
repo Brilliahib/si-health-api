@@ -9,7 +9,7 @@ class PostTestController extends Controller
 {
     public function index()
     {
-        $postTests = PostTest::with('module')->get();
+        $postTests = PostTest::with('subModule')->get();
 
         return response()->json([
             'meta' => [
@@ -21,17 +21,27 @@ class PostTestController extends Controller
         ]);
     }
 
+    public function getBySubModule($sub_module_id)
+    {
+        $postTests = PostTest::where('sub_module_id', $sub_module_id)->get();
+
+        return response()->json([
+            'meta' => ['status' => 'success'],
+            'data' => $postTests,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
-            'module_id' => 'required|exists:modules,id',
+            'sub_module_id' => 'required|exists:sub_modules,id',
             'question_set_id' => 'required|exists:question_sets,id',
             'name' => 'required|string|max:255',
         ]);
 
         try {
             $postTest = PostTest::create([
-                'module_id' => $request->module_id,
+                'sub_module_id' => $request->sub_module_id,
                 'question_set_id' => $request->question_set_id,
                 'name' => $request->name,
             ]);
@@ -60,23 +70,18 @@ class PostTestController extends Controller
         $postTest = PostTest::with('questionSet.questions.options')->findOrFail($id);
 
         $questions = $postTest->questionSet->questions->map(function ($question) {
-            $transformed = [
+            return [
                 'id' => $question->id,
-                'type' => $question->type,
+                'question_set_id' => $question->question_set_id,
                 'question_text' => $question->question_text,
-            ];
-
-            if ($question->type === 'multiple_choice') {
-                $transformed['options'] = $question->options->map(function ($option) {
+                'options' => $question->options->map(function ($option) {
                     return [
                         'id' => $option->id,
                         'option_text' => $option->option_text,
                         'score' => $option->score,
                     ];
-                });
-            }
-
-            return $transformed;
+                }),
+            ];
         });
 
         $data = [

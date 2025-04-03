@@ -40,17 +40,13 @@ class QuestionSetController extends Controller
         $questions = $set->questions->map(function ($question) {
             return [
                 'id' => $question->id,
-                'type' => $question->type,
                 'question_text' => $question->question_text,
-                'answer_key' => $question->answer_key,
-                'options' => $question->type === 'multiple_choice'
-                    ? $question->options->map(function ($option) {
-                        return [
-                            'id' => $option->id,
-                            'option_text' => $option->option_text,
-                        ];
-                    })
-                    : [],
+                'options' => $question->options->map(function ($option) {
+                    return [
+                        'id' => $option->id,
+                        'option_text' => $option->option_text,
+                    ];
+                }),
             ];
         });
 

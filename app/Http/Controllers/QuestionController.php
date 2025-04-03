@@ -13,10 +13,10 @@ class QuestionController extends Controller
     {
         $request->validate([
             'question_set_id' => 'required|uuid|exists:question_sets,id',
-            'type' => 'required|in:multiple_choice,essay',
             'question_text' => 'required|string',
-            'answer_key' => 'nullable|string',
-            'options' => 'nullable|array', // required if multiple_choice
+            'options' => 'required|array|min:2',
+            'options.*.option_text' => 'required|string',
+            'options.*.score' => 'nullable|numeric',
         ]);
 
         DB::beginTransaction();
@@ -24,20 +24,15 @@ class QuestionController extends Controller
         try {
             $question = Question::create([
                 'question_set_id' => $request->question_set_id,
-                'type' => $request->type,
                 'question_text' => $request->question_text,
-                'answer_key' => $request->answer_key,
             ]);
 
-            // If multiple choice, save a option
-            if ($request->type === 'multiple_choice' && is_array($request->options)) {
-                foreach ($request->options as $opt) {
-                    Option::create([
-                        'question_id' => $question->id,
-                        'option_text' => $opt['option_text'],
-                        'score' => $opt['score'] ?? null,
-                    ]);
-                }
+            foreach ($request->options as $opt) {
+                Option::create([
+                    'question_id' => $question->id,
+                    'option_text' => $opt['option_text'],
+                    'score' => $opt['score'] ?? null,
+                ]);
             }
 
             DB::commit();

@@ -16,8 +16,7 @@ return new class extends Migration
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('user_history_post_test_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('question_id')->constrained('questions')->onDelete('cascade');
-            $table->foreignUuid('selected_option_id')->nullable()->constrained('options')->onDelete('set null');
-            $table->text('answer_text')->nullable();
+            $table->foreignUuid('selected_option_id')->nullable()->constrained('options')->onDelete('cascade');
             $table->timestamp('answered_at')->nullable();
             $table->timestamps();
         });
