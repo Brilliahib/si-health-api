@@ -62,12 +62,6 @@ class ModuleController extends Controller
             ], 404);
         }
 
-        $details = match ($module->type) {
-            'capd' => $module->capds,
-            'hd' => $module->hds,
-            default => [],
-        };
-
         return response()->json([
             'meta' => [
                 'status' => 'success',
@@ -75,10 +69,7 @@ class ModuleController extends Controller
                 'statusCode' => 200,
             ],
             'data' => [
-                'module' => $module->makeHidden(['capds', 'hds', 'preTests', 'postTests']),
-                'pre_test' => $module->preTests,
-                'sub_modules' => $details,
-                'post_test' => $module->postTests,
+                'module' => $module,
             ],
         ]);
     }

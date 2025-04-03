@@ -18,6 +18,11 @@ class SubModule extends BaseModel
         return $this->hasMany(CAPD::class);
     }
 
+    public function moduleContents()
+    {
+        return $this->hasMany(ModuleContent::class);
+    }
+
     public function hd()
     {
         return $this->hasMany(HD::class);

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CAPDController;
 use App\Http\Controllers\HDController;
+use App\Http\Controllers\ModuleContentController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\PostTestController;
 use App\Http\Controllers\PreTestController;
@@ -48,15 +49,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/sub-modules/{id}', [SubModuleController::class, 'show']);
     Route::get('/sub-modules/category/{module_id}', [SubModuleController::class, 'getByModule']);
 
-    // CAPD public routes (read access)
-    Route::get('/capds', [CAPDController::class, 'index']);
-    Route::get('/capds/{id}', [CAPDController::class, 'show']);
-    Route::get('/capds/sub-modules/{sub_module_id}', [CAPDController::class, 'getBySubModule']);
-
-    // HD public routes (read access)
-    Route::get('/hds', [HDController::class, 'index']);
-    Route::get('/hds/{id}', [HDController::class, 'show']);
-    Route::get('/hds/sub-modules/{sub_module_id}', [HDController::class, 'getBySubModule']);
+    // Module content public routes (read access)
+    Route::get('/module-content', [ModuleContentController::class, 'index']);
+    Route::get('/module-content/{id}', [ModuleContentController::class, 'show']);
+    Route::get('/module-content/sub/{sub_module_id}', [ModuleContentController::class, 'getBySubModule']);
 
     // History screening public routes (read access)
     Route::get('/screening/history', [UserHistoryScreeningController::class, 'index']);
@@ -76,6 +72,7 @@ Route::middleware('auth:api')->group(function () {
     // Pre Test public routes (read access)
     Route::get('/pre-test', [PreTestController::class, 'index']);
     Route::get('/pre-test/{id}', [PreTestController::class, 'show']);
+    Route::get('/pre-test/sub/{sub_module_id}', [PreTestController::class, 'getBySubModule']);
 
     // Submit pretest routes
     Route::post('/pre-test/submit', [UserAnswerPreTestController::class, 'submit']);
@@ -91,6 +88,7 @@ Route::middleware('auth:api')->group(function () {
     // Post test public routes (read access)
     Route::get('/post-test', [PostTestController::class, 'index']);
     Route::get('/post-test/{id}', [PostTestController::class, 'show']);
+    Route::get('/post-test/sub/{sub_module_id}', [PostTestController::class, 'getBySubModule']);
 
     // Submit post test routes
     Route::post('/post-test/submit', [UserAnswerPostTestController::class, 'submit']);
@@ -114,15 +112,10 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/sub-modules/{id}', [SubModuleController::class, 'update']);
         Route::delete('/sub-modules/{id}', [SubModuleController::class, 'destroy']);
 
-        // CAPD admin routes
-        Route::post('/capds', [CAPDController::class, 'store']);
-        Route::put('/capds/{id}', [CAPDController::class, 'update']);
-        Route::delete('/capds/{id}', [CAPDController::class, 'destroy']);
-
-        // HD admin routes
-        Route::post('/hds', [HDController::class, 'store']);
-        Route::put('/hds/{id}', [HDController::class, 'update']);
-        Route::delete('/hds/{id}', [HDController::class, 'destroy']);
+        // Module content admin routes
+        Route::post('/module-content', [ModuleContentController::class, 'store']);
+        Route::put('/module-content/{id}', [ModuleContentController::class, 'update']);
+        Route::delete('/module-content/{id}', [ModuleContentController::class, 'destroy']);
 
         // Screening admin routes
         Route::post('/screening', [ScreeningController::class, 'store']);

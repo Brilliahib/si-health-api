@@ -14,8 +14,8 @@ class PostTest extends BaseModel
         return $this->belongsTo(QuestionSet::class);
     }
 
-    public function module()
+    public function subModule()
     {
-        return $this->belongsTo(Module::class);
+        return $this->belongsTo(SubModule::class);
     }
 }

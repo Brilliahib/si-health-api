@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\PreTest;
-use App\Models\QuestionSet;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class PreTestController extends Controller
 {
     public function index()
     {
-        $preTests = PreTest::with('module')->get();
+        $preTests = PreTest::with('subModule')->get();
+
+        return response()->json([
+            'meta' => ['status' => 'success'],
+            'data' => $preTests,
+        ]);
+    }
+
+    public function getBySubModule($sub_module_id)
+    {
+        $preTests = PreTest::where('sub_module_id', $sub_module_id)->get();
 
         return response()->json([
             'meta' => ['status' => 'success'],
@@ -22,14 +30,14 @@ class PreTestController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'module_id' => 'required|exists:modules,id',
+            'sub_module_id' => 'required|exists:sub_modules,id',
             'question_set_id' => 'required|exists:question_sets,id',
             'name' => 'required|string|max:255',
         ]);
 
         try {
             $preTest = PreTest::create([
-                'module_id' => $request->module_id,
+                'sub_module_id' => $request->sub_module_id,
                 'question_set_id' => $request->question_set_id,
                 'name' => $request->name,
             ]);
@@ -58,23 +66,18 @@ class PreTestController extends Controller
         $preTest = PreTest::with('questionSet.questions.options')->findOrFail($id);
 
         $questions = $preTest->questionSet->questions->map(function ($question) {
-            $transformed = [
+            return [
                 'id' => $question->id,
-                'type' => $question->type,
+                'question_set_id' => $question->question_set_id,
                 'question_text' => $question->question_text,
-            ];
-
-            if ($question->type === 'multiple_choice') {
-                $transformed['options'] = $question->options->map(function ($option) {
+                'options' => $question->options->map(function ($option) {
                     return [
                         'id' => $option->id,
                         'option_text' => $option->option_text,
                         'score' => $option->score,
                     ];
-                });
-            }
-
-            return $transformed;
+                }),
+            ];
         });
 
         $data = [

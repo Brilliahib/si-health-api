@@ -10,7 +10,7 @@ class SubModuleController extends Controller
 {
     public function index()
     {
-        $subModules = SubModule::all();
+        $subModules = SubModule::with('module')->orderBy('created_at', 'desc')->get();
 
         return response()->json([
             'meta' => [
@@ -63,7 +63,7 @@ class SubModuleController extends Controller
 
     public function show($id)
     {
-        $subModule = SubModule::with('capd', 'hd')->find($id);
+        $subModule = SubModule::with('moduleContents')->find($id);
 
         if (!$subModule) {
             return response()->json([
