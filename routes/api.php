@@ -5,6 +5,7 @@ use App\Http\Controllers\CAPDController;
 use App\Http\Controllers\HDController;
 use App\Http\Controllers\ModuleContentController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\PersonalInformationController;
 use App\Http\Controllers\PostTestController;
 use App\Http\Controllers\PreTestController;
 use App\Http\Controllers\QuestionController;
@@ -18,9 +19,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserHistoryPostTestController;
 use App\Http\Controllers\UserHistoryPreTestController;
 use App\Http\Controllers\UserHistoryScreeningController;
-use App\Models\UserAnswerPreTest;
-use App\Models\UserHistoryScreening;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -101,6 +99,20 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/question', [QuestionController::class, 'index']);
     Route::get('/question/{id}', [QuestionController::class, 'show']);
 
+    // Personal information routes
+    Route::prefix('personal')->group(function () {
+        Route::post('/', [PersonalInformationController::class, 'store']);
+
+        // Get personal information of the authenticated userlogin
+        Route::get('/me', [PersonalInformationController::class, 'showAuthenticatedUserPersonalInformation']);
+
+        // Check if authenticated user has personal information
+        Route::get('/check', [PersonalInformationController::class, 'checkUserPersonalInformation']);
+
+        Route::get('/{id}', [PersonalInformationController::class, 'show']);
+        Route::put('/{id}', [PersonalInformationController::class, 'update']);
+    });
+
     Route::middleware(['role:admin'])->group(function () {
         // Module admin routes
         Route::post('/modules', [ModuleController::class, 'store']);
@@ -142,6 +154,11 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/question/{id}', [QuestionController::class, 'update']);
         Route::delete('/question/{id}', [QuestionController::class, 'destroy']);
 
+        // Personal information routes
+        Route::prefix('personal')->group(function () {
+            Route::get('/', [PersonalInformationController::class, 'index']);
+            Route::delete('/{id}', [PersonalInformationController::class, 'destroy']);
+        });
         // Users admin routes
         Route::apiResource('users', UserController::class);
     });

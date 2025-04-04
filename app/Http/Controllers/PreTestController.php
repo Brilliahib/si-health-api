@@ -68,7 +68,6 @@ class PreTestController extends Controller
         $questions = $preTest->questionSet->questions->map(function ($question) {
             return [
                 'id' => $question->id,
-                'question_set_id' => $question->question_set_id,
                 'question_text' => $question->question_text,
                 'options' => $question->options->map(function ($option) {
                     return [
@@ -83,6 +82,7 @@ class PreTestController extends Controller
         $data = [
             'id' => $preTest->id,
             'name' => $preTest->name,
+            'question_set_id' => $preTest->question_set_id,
             'questions' => $questions,
         ];
 

@@ -56,7 +56,6 @@ class ScreeningController extends Controller
         $questions = $screening->questionSet->questions->map(function ($question) {
             return [
                 'id' => $question->id,
-                'question_set_id' => $question->question_set_id,
                 'question_text' => $question->question_text,
                 'options' => $question->options->map(function ($option) {
                     return [
@@ -76,6 +75,7 @@ class ScreeningController extends Controller
             'data' => [
                 'id' => $screening->id,
                 'name' => $screening->name,
+                'question_set_id' => $screening->question_set_id,
                 'questions' => $questions,
             ],
         ]);
@@ -86,10 +86,11 @@ class ScreeningController extends Controller
         $screening = Screening::findOrFail($id);
 
         $request->validate([
-            'title' => 'sometimes|string',
+            'question_set_id' => 'sometimes|exists:question_sets,id',
+            'name' => 'sometimes|string',
         ]);
 
-        $screening->update($request->only('title'));
+        $screening->update($request->only('name', 'question_set_id'));
 
         return response()->json([
             'meta' => ['status' => 'success', 'message' => 'Screening updated'],
