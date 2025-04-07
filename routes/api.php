@@ -38,6 +38,8 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/auth/get-auth', [AuthController::class, 'getAuth']);
+    Route::put('/auth/change-password', [AuthController::class, 'changePassword']);
+    Route::put('/auth/update-account', [AuthController::class, 'updateAccount']);
 
     Route::get('/modules', [ModuleController::class, 'index']);
     Route::get('/modules/type', [ModuleController::class, 'getByType']);

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->string('age');
             $table->string('gender');
+            $table->string('work');
             $table->boolean('is_married');
             $table->string('family_status');
             $table->string('patient_type');

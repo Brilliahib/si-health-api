@@ -29,19 +29,36 @@ class AuthController extends Controller
 
         if (User::where('email', $data['email'])->exists()) {
             throw new HttpResponseException(
-                response(
-                    [
-                        'statusCode' => 400,
-                        'message' => 'Email already in use',
-                    ],
-                    400,
-                ),
+                response([
+                    'statusCode' => 400,
+                    'message' => 'Email already in use',
+                ], 400)
+            );
+        }
+
+        if (User::where('username', $data['username'])->exists()) {
+            throw new HttpResponseException(
+                response([
+                    'statusCode' => 400,
+                    'message' => 'Username already in use',
+                ], 400)
+            );
+        }
+
+        if (User::where('phone_number', $data['phone_number'])->exists()) {
+            throw new HttpResponseException(
+                response([
+                    'statusCode' => 400,
+                    'message' => 'Phone number already in use',
+                ], 400)
             );
         }
 
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'username' => $data['username'],
+            'phone_number' => $data['phone_number'],
             'password' => Hash::make($data['password']),
         ]);
 
@@ -57,15 +74,15 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        $user = User::where('email', $data['email'])->first();
+        $user = User::where('email', $data['login'])
+            ->orWhere('username', $data['login'])
+            ->orWhere('phone_number', $data['login'])
+            ->first();
 
         if (!$user || !Hash::check($data['password'], $user->password)) {
-            return response()->json(
-                [
-                    'message' => 'Invalid email or password',
-                ],
-                401,
-            );
+            return response()->json([
+                'message' => 'Invalid credentials',
+            ], 401);
         }
 
         $token = JWTAuth::fromUser($user);
@@ -75,6 +92,7 @@ class AuthController extends Controller
             'token' => $token,
         ]);
     }
+
 
     public function getAuth(): JsonResponse
     {
@@ -149,7 +167,7 @@ class AuthController extends Controller
         if ($request->hasFile('profile')) {
             $imageName = time() . '_' . $request->file('profile')->getClientOriginalName();
             $imagePath = $request->file('profile')->storeAs('profile/users', $imageName, 'public');
-            $data['profile'] = 'public/' . $imagePath; 
+            $data['profile'] = 'public/' . $imagePath;
         }
 
         $user->update($data);

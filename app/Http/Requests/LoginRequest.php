@@ -24,12 +24,14 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'max:100'],
-            'password' => ['required', 'max:100'],
+            'login' => 'required|string',
+            'password' => 'required|string|min:6',
         ];
     }
 
-    public function failedValidation(Validator $validator){
+
+    public function failedValidation(Validator $validator)
+    {
         throw new HttpResponseException(response([
             "errors" => $validator->getMessageBag()
         ], 400));
