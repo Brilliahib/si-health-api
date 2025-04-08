@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CAPDController;
+use App\Http\Controllers\DiscussionCommentAnswerController;
+use App\Http\Controllers\DiscussionCommentController;
+use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\HDController;
 use App\Http\Controllers\ModuleContentController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\PersonalInformationController;
 use App\Http\Controllers\PostTestController;
 use App\Http\Controllers\PreTestController;
 use App\Http\Controllers\QuestionController;
@@ -18,9 +22,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserHistoryPostTestController;
 use App\Http\Controllers\UserHistoryPreTestController;
 use App\Http\Controllers\UserHistoryScreeningController;
-use App\Models\UserAnswerPreTest;
-use App\Models\UserHistoryScreening;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,10 +41,30 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/auth/get-auth', [AuthController::class, 'getAuth']);
+    Route::put('/auth/change-password', [AuthController::class, 'changePassword']);
+    Route::put('/auth/update-account', [AuthController::class, 'updateAccount']);
 
     Route::get('/modules', [ModuleController::class, 'index']);
     Route::get('/modules/type', [ModuleController::class, 'getByType']);
     Route::get('/modules/{id}', [ModuleController::class, 'show']);
+
+    Route::get('/discussion', [DiscussionController::class, 'index']);
+    Route::post('/discussion', [DiscussionController::class, 'store']);
+    Route::get('/discussion/{id}', [DiscussionController::class, 'show']);
+
+    // Discussion Comment routes
+    Route::get('/discussion/comment/{id}', [DiscussionCommentController::class, 'getByDiscussionId']);
+    Route::get('/discussion/comment/detail/{id}', [DiscussionCommentController::class, 'show']);
+    Route::post('/discussion/comment', [DiscussionCommentController::class, 'store']);
+    Route::put('/discussion/comment/{id}', [DiscussionCommentController::class, 'update']);
+    Route::delete('/discussion/comment/{id}', [DiscussionCommentController::class, 'destroy']);
+
+    // Discussion Comment Answer routes
+    Route::prefix('discussion/comment/answer')->middleware('auth:sanctum')->group(function () {
+        Route::get('/{discussion_comment_id}', [DiscussionCommentAnswerController::class, 'getByCommentId']);
+        Route::post('/', [DiscussionCommentAnswerController::class, 'store']);
+        Route::delete('/{id}', [DiscussionCommentAnswerController::class, 'destroy']);
+    });
 
     Route::get('/sub-modules', [SubModuleController::class, 'index']);
     Route::get('/sub-modules/{id}', [SubModuleController::class, 'show']);
@@ -101,11 +122,29 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/question', [QuestionController::class, 'index']);
     Route::get('/question/{id}', [QuestionController::class, 'show']);
 
+    // Personal information routes
+    Route::prefix('personal')->group(function () {
+        Route::post('/', [PersonalInformationController::class, 'store']);
+
+        // Get personal information of the authenticated userlogin
+        Route::get('/me', [PersonalInformationController::class, 'showAuthenticatedUserPersonalInformation']);
+
+        // Check if authenticated user has personal information
+        Route::get('/check', [PersonalInformationController::class, 'checkUserPersonalInformation']);
+
+        Route::get('/{id}', [PersonalInformationController::class, 'show']);
+        Route::put('/{id}', [PersonalInformationController::class, 'update']);
+    });
+
     Route::middleware(['role:admin'])->group(function () {
         // Module admin routes
         Route::post('/modules', [ModuleController::class, 'store']);
         Route::put('/modules/{id}', [ModuleController::class, 'update']);
         Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
+
+        // Discussion admin routes
+        Route::put('/discussion/{id}', [DiscussionController::class, 'update']);
+        Route::delete('/discussion/{id}', [DiscussionController::class, 'destroy']);
 
         // Sub Module admin routes
         Route::post('/sub-modules', [SubModuleController::class, 'store']);
@@ -142,6 +181,11 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/question/{id}', [QuestionController::class, 'update']);
         Route::delete('/question/{id}', [QuestionController::class, 'destroy']);
 
+        // Personal information routes
+        Route::prefix('personal')->group(function () {
+            Route::get('/', [PersonalInformationController::class, 'index']);
+            Route::delete('/{id}', [PersonalInformationController::class, 'destroy']);
+        });
         // Users admin routes
         Route::apiResource('users', UserController::class);
     });

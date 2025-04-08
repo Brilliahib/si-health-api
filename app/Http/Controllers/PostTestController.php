@@ -72,7 +72,6 @@ class PostTestController extends Controller
         $questions = $postTest->questionSet->questions->map(function ($question) {
             return [
                 'id' => $question->id,
-                'question_set_id' => $question->question_set_id,
                 'question_text' => $question->question_text,
                 'options' => $question->options->map(function ($option) {
                     return [
@@ -87,6 +86,7 @@ class PostTestController extends Controller
         $data = [
             'id' => $postTest->id,
             'name' => $postTest->name,
+            'question_set_id' => $postTest->question_set_id,
             'questions' => $questions,
         ];
 
