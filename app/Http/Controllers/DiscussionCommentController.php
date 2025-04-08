@@ -95,4 +95,29 @@ class DiscussionCommentController extends Controller
             'data' => null,
         ]);
     }
+
+    public function show($id)
+    {
+        $comment = DiscussionComment::with('user')->find($id);
+
+        if (!$comment) {
+            return response()->json([
+                'meta' => [
+                    'status' => 'error',
+                    'message' => 'Comment not found',
+                    'statusCode' => 404,
+                ],
+                'data' => null,
+            ], 404);
+        }
+
+        return response()->json([
+            'meta' => [
+                'status' => 'success',
+                'message' => 'Comment detail retrieved successfully',
+                'statusCode' => 200,
+            ],
+            'data' => $comment,
+        ]);
+    }
 }

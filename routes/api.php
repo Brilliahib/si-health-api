@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CAPDController;
+use App\Http\Controllers\DiscussionCommentAnswerController;
 use App\Http\Controllers\DiscussionCommentController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\HDController;
@@ -48,14 +49,22 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/modules/{id}', [ModuleController::class, 'show']);
 
     Route::get('/discussion', [DiscussionController::class, 'index']);
+    Route::post('/discussion', [DiscussionController::class, 'store']);
     Route::get('/discussion/{id}', [DiscussionController::class, 'show']);
 
-    // Discussion Comment admin routes
-    Route::get('/discussion/comment', [DiscussionCommentController::class, 'index']);
-    Route::get('/discussion/comment/{id}', [DiscussionCommentController::class, 'show']);
+    // Discussion Comment routes
+    Route::get('/discussion/comment/{id}', [DiscussionCommentController::class, 'getByDiscussionId']);
+    Route::get('/discussion/comment/detail/{id}', [DiscussionCommentController::class, 'show']);
     Route::post('/discussion/comment', [DiscussionCommentController::class, 'store']);
-    Route::put('/discussion/comment{id}', [DiscussionCommentController::class, 'update']);
-    Route::delete('/discussion/comment{id}', [DiscussionCommentController::class, 'destroy']);
+    Route::put('/discussion/comment/{id}', [DiscussionCommentController::class, 'update']);
+    Route::delete('/discussion/comment/{id}', [DiscussionCommentController::class, 'destroy']);
+
+    // Discussion Comment Answer routes
+    Route::prefix('discussion/comment/answer')->middleware('auth:sanctum')->group(function () {
+        Route::get('/{discussion_comment_id}', [DiscussionCommentAnswerController::class, 'getByCommentId']);
+        Route::post('/', [DiscussionCommentAnswerController::class, 'store']);
+        Route::delete('/{id}', [DiscussionCommentAnswerController::class, 'destroy']);
+    });
 
     Route::get('/sub-modules', [SubModuleController::class, 'index']);
     Route::get('/sub-modules/{id}', [SubModuleController::class, 'show']);
@@ -134,7 +143,6 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
 
         // Discussion admin routes
-        Route::post('/discussion', [DiscussionController::class, 'store']);
         Route::put('/discussion/{id}', [DiscussionController::class, 'update']);
         Route::delete('/discussion/{id}', [DiscussionController::class, 'destroy']);
 

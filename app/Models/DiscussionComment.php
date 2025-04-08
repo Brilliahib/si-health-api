@@ -17,4 +17,9 @@ class DiscussionComment extends BaseModel
     {
         return $this->belongsTo(User::class);
     }
+
+    public function answers()
+    {
+        return $this->hasMany(DiscussionCommentAnswer::class);
+    }
 }
