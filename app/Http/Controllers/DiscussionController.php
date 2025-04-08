@@ -69,7 +69,7 @@ class DiscussionController extends Controller
 
     public function show($id)
     {
-        $discussion = Discussion::with(['comments.user'])->findOrFail($id);
+        $discussion = Discussion::with(['comments.user', 'comments.answers'])->findOrFail($id);
 
         if (!$discussion) {
             return response()->json([
@@ -98,9 +98,19 @@ class DiscussionController extends Controller
                     'user' => [
                         'id' => $comment->user->id,
                         'name' => $comment->user->name,
-                        'username' => $comment->user->username,
-                        'email' => $comment->user->email,
-                    ]
+                    ],
+                    'answers' => $comment->answers->map(function ($answer) {
+                        return [
+                            'id' => $answer->id,
+                            'comment' => $answer->comment,
+                            'image_path' => $answer->image_path,
+                            'created_at' => $answer->created_at,
+                            'user' => [
+                                'id' => $answer->user->id,
+                                'name' => $answer->user->name,
+                            ],
+                        ];
+                    }),
                 ];
             }),
         ];
