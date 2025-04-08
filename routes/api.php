@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CAPDController;
+use App\Http\Controllers\DiscussionCommentController;
+use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\HDController;
 use App\Http\Controllers\ModuleContentController;
 use App\Http\Controllers\ModuleController;
@@ -44,6 +46,16 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/modules', [ModuleController::class, 'index']);
     Route::get('/modules/type', [ModuleController::class, 'getByType']);
     Route::get('/modules/{id}', [ModuleController::class, 'show']);
+
+    Route::get('/discussion', [DiscussionController::class, 'index']);
+    Route::get('/discussion/{id}', [DiscussionController::class, 'show']);
+
+    // Discussion Comment admin routes
+    Route::get('/discussion/comment', [DiscussionCommentController::class, 'index']);
+    Route::get('/discussion/comment/{id}', [DiscussionCommentController::class, 'show']);
+    Route::post('/discussion/comment', [DiscussionCommentController::class, 'store']);
+    Route::put('/discussion/comment{id}', [DiscussionCommentController::class, 'update']);
+    Route::delete('/discussion/comment{id}', [DiscussionCommentController::class, 'destroy']);
 
     Route::get('/sub-modules', [SubModuleController::class, 'index']);
     Route::get('/sub-modules/{id}', [SubModuleController::class, 'show']);
@@ -120,6 +132,11 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/modules', [ModuleController::class, 'store']);
         Route::put('/modules/{id}', [ModuleController::class, 'update']);
         Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
+
+        // Discussion admin routes
+        Route::post('/discussion', [DiscussionController::class, 'store']);
+        Route::put('/discussion/{id}', [DiscussionController::class, 'update']);
+        Route::delete('/discussion/{id}', [DiscussionController::class, 'destroy']);
 
         // Sub Module admin routes
         Route::post('/sub-modules', [SubModuleController::class, 'store']);

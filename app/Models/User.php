@@ -78,6 +78,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(UserHistoryPostTest::class);
     }
 
+    public function discussionComments()
+    {
+        return $this->hasMany(DiscussionComment::class);
+    }
+
     public function personalInformation()
     {
         return $this->hasOne(PersonalInformation::class);
