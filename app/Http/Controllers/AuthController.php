@@ -31,7 +31,7 @@ class AuthController extends Controller
             throw new HttpResponseException(
                 response([
                     'statusCode' => 400,
-                    'message' => 'Email already in use',
+                    'message' => 'Email sudah digunakan',
                 ], 400)
             );
         }
@@ -40,7 +40,7 @@ class AuthController extends Controller
             throw new HttpResponseException(
                 response([
                     'statusCode' => 400,
-                    'message' => 'Username already in use',
+                    'message' => 'Username sudah digunakan',
                 ], 400)
             );
         }
@@ -49,7 +49,7 @@ class AuthController extends Controller
             throw new HttpResponseException(
                 response([
                     'statusCode' => 400,
-                    'message' => 'Phone number already in use',
+                    'message' => 'Nomor telepon sudah digunakan',
                 ], 400)
             );
         }
