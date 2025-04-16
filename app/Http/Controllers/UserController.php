@@ -15,7 +15,7 @@ class UserController extends Controller
                 'message' => 'Daftar user berhasil diambil',
                 'statusCode' => 200
             ],
-            'data' => User::all()
+            'data' => User::where('role', 'user')->get()
         ]);
     }
 
