@@ -23,12 +23,12 @@ class UserHistoryScreeningController extends Controller
 
     public function getAllHistory()
     {
-        $histories = UserHistoryScreening::with(['postTest', 'user'])
+        $histories = UserHistoryScreening::with(['screenings', 'user'])
             ->orderBy('created_at', 'desc')
             ->get();
 
         return response()->json([
-            'message' => 'Berhasil mengambil semua history post test (semua user)',
+            'message' => 'Berhasil mengambil semua history screening (semua user)',
             'data' => $histories,
         ]);
     }

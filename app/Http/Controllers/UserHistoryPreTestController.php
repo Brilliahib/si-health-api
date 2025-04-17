@@ -23,12 +23,12 @@ class UserHistoryPreTestController extends Controller
 
     public function getAllHistory()
     {
-        $histories = UserHistoryPreTest::with(['postTest', 'user'])
+        $histories = UserHistoryPreTest::with(['preTest', 'user'])
             ->orderBy('created_at', 'desc')
             ->get();
 
         return response()->json([
-            'message' => 'Berhasil mengambil semua history post test (semua user)',
+            'message' => 'Berhasil mengambil semua history pre-test (semua user)',
             'data' => $histories,
         ]);
     }
