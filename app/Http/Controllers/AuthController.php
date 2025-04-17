@@ -148,6 +148,7 @@ class AuthController extends Controller
         );
     }
 
+
     public function updateAccount(UpdateAccountRequest $request): JsonResponse
     {
         $user = Auth::user();
