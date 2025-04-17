@@ -23,7 +23,7 @@ class UserHistoryScreeningController extends Controller
 
     public function getAllHistory()
     {
-        $histories = UserHistoryScreening::with(['screenings', 'user'])
+        $histories = UserHistoryScreening::with(['screening', 'user'])
             ->orderBy('created_at', 'desc')
             ->get();
 
