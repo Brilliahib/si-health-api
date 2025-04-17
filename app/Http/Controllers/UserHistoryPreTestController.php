@@ -36,7 +36,7 @@ class UserHistoryPreTestController extends Controller
     public function show($id)
     {
 
-        $history = UserHistoryPreTest::with(['answer.question.options', 'answer.selectedOption',])
+        $history = UserHistoryPreTest::with(['user', 'answer.question.options', 'answer.selectedOption',])
             ->where('id', $id)
             ->first();
 
@@ -68,6 +68,10 @@ class UserHistoryPreTestController extends Controller
                         ],
                     ];
                 }),
+                'user' => [
+                    'id' => $history->user->id,
+                    'name' => $history->user->name,
+                ],
             ],
         ]);
     }
