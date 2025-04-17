@@ -36,7 +36,7 @@ class UserHistoryScreeningController extends Controller
     public function show($id)
     {
 
-        $history = UserHistoryScreening::with(['answer.question.options', 'answer.selectedOption',])
+        $history = UserHistoryScreening::with(['user', 'answer.question.options', 'answer.selectedOption',])
             ->where('id', $id)
             ->first();
 
@@ -64,6 +64,10 @@ class UserHistoryScreeningController extends Controller
                         ],
                     ];
                 }),
+                'user' => [
+                    'id' => $history->user->id,
+                    'name' => $history->user->name,
+                ],
                 'created_at' => $history->created_at,
             ],
         ]);
