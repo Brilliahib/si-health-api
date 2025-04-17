@@ -142,6 +142,31 @@ class PersonalInformationController extends Controller
         ]);
     }
 
+    public function getPersonalInformationByUserId($user_id)
+    {
+        $personalInformation = PersonalInformation::where('user_id', $user_id)->first();
+
+        if (!$personalInformation) {
+            return response()->json([
+                'meta' => [
+                    'status' => 'error',
+                    'message' => 'Personal Information not found for this user',
+                    'statusCode' => 404,
+                ],
+                'data' => null,
+            ], 404);
+        }
+
+        return response()->json([
+            'meta' => [
+                'status' => 'success',
+                'message' => 'Personal Information fetched successfully',
+                'statusCode' => 200,
+            ],
+            'data' => $personalInformation,
+        ]);
+    }
+
     public function checkUserPersonalInformation(Request $request)
     {
         $user = $request->user();

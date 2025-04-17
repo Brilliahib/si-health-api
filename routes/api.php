@@ -134,6 +134,7 @@ Route::middleware('auth:api')->group(function () {
 
         Route::get('/{id}', [PersonalInformationController::class, 'show']);
         Route::put('/{id}', [PersonalInformationController::class, 'update']);
+        Route::get('/user/{user_id}', [PersonalInformationController::class, 'getPersonalInformationByUserId']);
     });
 
     Route::middleware(['role:admin'])->group(function () {
