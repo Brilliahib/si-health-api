@@ -186,6 +186,12 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/', [PersonalInformationController::class, 'index']);
             Route::delete('/{id}', [PersonalInformationController::class, 'destroy']);
         });
+
+        Route::prefix('history')->group(function () {
+            Route::get('/screening', [UserHistoryScreeningController::class, 'getAllHistory']);
+            Route::get('/pre-test', [UserHistoryPreTestController::class, 'getAllHistory']);
+            Route::get('/post-test', [UserHistoryPostTestController::class, 'getAllHistory']);
+        });
         // Users admin routes
         Route::apiResource('users', UserController::class);
     });

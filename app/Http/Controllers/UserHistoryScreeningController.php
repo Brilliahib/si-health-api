@@ -21,6 +21,18 @@ class UserHistoryScreeningController extends Controller
         ]);
     }
 
+    public function getAllHistory()
+    {
+        $histories = UserHistoryScreening::with(['postTest', 'user'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'message' => 'Berhasil mengambil semua history post test (semua user)',
+            'data' => $histories,
+        ]);
+    }
+
     public function show($id)
     {
 
