@@ -9,7 +9,7 @@ class PostTestController extends Controller
 {
     public function index()
     {
-        $postTests = PostTest::with('subModule')->get();
+        $postTests = PostTest::with('subModule.module')->get();
 
         return response()->json([
             'meta' => [
