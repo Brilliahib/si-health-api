@@ -9,7 +9,7 @@ class PreTestController extends Controller
 {
     public function index()
     {
-        $preTests = PreTest::with('subModule')->get();
+        $preTests = PreTest::with('subModule.module')->get();
 
         return response()->json([
             'meta' => ['status' => 'success'],
