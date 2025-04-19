@@ -22,6 +22,26 @@ class UserHistoryPostTestController extends Controller
         ]);
     }
 
+    public function getByPostTestId($postTestId)
+    {
+        $histories = UserHistoryPostTest::with(['user', 'postTest'])
+            ->where('post_test_id', $postTestId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        if ($histories->isEmpty()) {
+            return response()->json([
+                'message' => 'Tidak ada history post test untuk post_test_id tersebut',
+                'data' => [],
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Berhasil mengambil history post test berdasarkan post_test_id',
+            'data' => $histories,
+        ]);
+    }
+
     public function getAllHistory()
     {
         $histories = UserHistoryPostTest::with(['postTest', 'user'])

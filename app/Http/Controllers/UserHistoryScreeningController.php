@@ -21,6 +21,26 @@ class UserHistoryScreeningController extends Controller
         ]);
     }
 
+    public function getByScreeningId($screeningId)
+    {
+        $histories = UserHistoryScreening::with(['user', 'screening'])
+            ->where('screening_id', $screeningId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        if ($histories->isEmpty()) {
+            return response()->json([
+                'message' => 'Tidak ada history screening untuk screening_id tersebut',
+                'data' => [],
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Berhasil mengambil history screening berdasarkan screening_id',
+            'data' => $histories,
+        ]);
+    }
+
     public function getAllHistory()
     {
         $histories = UserHistoryScreening::with(['screening', 'user'])
