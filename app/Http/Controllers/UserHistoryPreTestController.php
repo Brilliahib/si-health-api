@@ -21,6 +21,26 @@ class UserHistoryPreTestController extends Controller
         ]);
     }
 
+    public function getByPreTestId($preTestId)
+    {
+        $histories = UserHistoryPreTest::with(['user', 'preTest'])
+            ->where('pre_test_id', $preTestId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        if ($histories->isEmpty()) {
+            return response()->json([
+                'message' => 'Tidak ada history pre test untuk pre_test_id tersebut',
+                'data' => [],
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Berhasil mengambil history pre test berdasarkan pre_test_id',
+            'data' => $histories,
+        ]);
+    }
+
     public function getAllHistory()
     {
         $histories = UserHistoryPreTest::with(['preTest', 'user'])

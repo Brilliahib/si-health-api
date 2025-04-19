@@ -190,8 +190,11 @@ Route::middleware('auth:api')->group(function () {
 
         Route::prefix('history')->group(function () {
             Route::get('/screening', [UserHistoryScreeningController::class, 'getAllHistory']);
+            Route::get('/screening/{screeningId}', [UserHistoryScreeningController::class, 'getByScreeningId']);
             Route::get('/pre-test', [UserHistoryPreTestController::class, 'getAllHistory']);
+            Route::get('/pre-test/{preTestId}', [UserHistoryPreTestController::class, 'getByPreTestId']);
             Route::get('/post-test', [UserHistoryPostTestController::class, 'getAllHistory']);
+            Route::get('/post-test/{postTestId}', [UserHistoryPostTestController::class, 'getByPostTestId']);
         });
         // Users admin routes
         Route::apiResource('users', UserController::class);
