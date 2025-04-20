@@ -45,6 +45,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/auth/update-account', [AuthController::class, 'updateAccount']);
 
     Route::get('/modules', [ModuleController::class, 'index']);
+    Route::get('/modules/users', [ModuleController::class, 'getAllModuleUsers']);
     Route::get('/modules/type', [ModuleController::class, 'getByType']);
     Route::get('/modules/{id}', [ModuleController::class, 'show']);
 
