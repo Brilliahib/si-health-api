@@ -133,7 +133,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/check', [PersonalInformationController::class, 'checkUserPersonalInformation']);
 
         Route::get('/{id}', [PersonalInformationController::class, 'show']);
-        Route::put('/{id}', [PersonalInformationController::class, 'update']);
+        Route::put('/', [PersonalInformationController::class, 'update']);
         Route::get('/user/{user_id}', [PersonalInformationController::class, 'getPersonalInformationByUserId']);
     });
 
