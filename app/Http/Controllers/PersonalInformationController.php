@@ -88,19 +88,19 @@ class PersonalInformationController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $user = $request->user();
-        $personalInformation = PersonalInformation::findOrFail($id);
+        $personalInformation = PersonalInformation::where('user_id', $user->id)->first();
 
-        if ($personalInformation->user_id !== $user->id) {
+        if (!$personalInformation) {
             return response()->json([
                 'meta' => [
                     'status' => 'error',
-                    'message' => 'Unauthorized: You can only update your own personal information',
-                    'statusCode' => 403
+                    'message' => 'Personal Information not found for this user',
+                    'statusCode' => 404
                 ]
-            ], 403);
+            ], 404);
         }
 
         $request->validate([
