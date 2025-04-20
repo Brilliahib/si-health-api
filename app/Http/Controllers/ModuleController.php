@@ -8,7 +8,21 @@ use Illuminate\Support\Str;
 
 class ModuleController extends Controller
 {
-    public function index(Request $request)
+    public function index()
+    {
+        $modules = Module::all();
+
+        return response()->json([
+            'meta' => [
+                'status' => 'success',
+                'message' => 'Successfully get all modules',
+                'statusCode' => 200,
+            ],
+            'data' => $modules,
+        ]);
+    }
+
+    public function getAllModuleUsers(Request $request)
     {
         $query = Module::query();
 
