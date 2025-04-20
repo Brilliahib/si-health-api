@@ -8,14 +8,35 @@ use Illuminate\Support\Str;
 
 class ModuleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $modules = Module::all();
+        $query = Module::query();
+
+        // check if has query parameter
+        if ($request->has('type')) {
+            $type = $request->get('type');
+
+            // validation for type
+            if (!in_array($type, ['hd', 'capd'])) {
+                return response()->json([
+                    'meta' => [
+                        'status' => 'error',
+                        'message' => 'Invalid type parameter. Allowed values are hd or capd.',
+                        'statusCode' => 400,
+                    ],
+                    'data' => [],
+                ], 400);
+            }
+
+            $query->where('type', $type);
+        }
+
+        $modules = $query->get();
 
         return response()->json([
             'meta' => [
                 'status' => 'success',
-                'message' => 'Successfully get all mdoules',
+                'message' => 'Successfully get all modules',
                 'statusCode' => 200,
             ],
             'data' => $modules,
