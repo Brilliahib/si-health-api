@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('gender');
             $table->string('work');
             $table->boolean('is_married');
-            $table->string('family_status');
+            $table->string('last_education');
+            $table->string('origin_hospital');
             $table->string('patient_type');
             $table->string('disease_duration');
             $table->string('dialisis_duration');
