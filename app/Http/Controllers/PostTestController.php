@@ -87,8 +87,8 @@ class PostTestController extends Controller
             'id' => $postTest->id,
             'name' => $postTest->name,
             'submodule' => [
-                'id' => $postTest->subModule->id ?? null,
-                'name' => $postTest->subModule->name ?? null,
+                'id' => $postTest->subModule->id,
+                'name' => $postTest->subModule->name,
             ],
             'question_set_id' => $postTest->question_set_id,
             'questions' => $questions,
