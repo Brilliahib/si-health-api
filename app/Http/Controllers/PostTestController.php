@@ -67,7 +67,7 @@ class PostTestController extends Controller
 
     public function show($id)
     {
-        $postTest = PostTest::with('questionSet.questions.options')->findOrFail($id);
+        $postTest = PostTest::with('questionSet.questions.options', 'subModule.module')->findOrFail($id);
 
         $questions = $postTest->questionSet->questions->map(function ($question) {
             return [
