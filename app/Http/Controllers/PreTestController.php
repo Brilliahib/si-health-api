@@ -63,7 +63,7 @@ class PreTestController extends Controller
 
     public function show($id)
     {
-        $preTest = PreTest::with('questionSet.questions.options')->findOrFail($id);
+        $preTest = PreTest::with('questionSet.questions.options', 'subModule.module')->findOrFail($id);
 
         $questions = $preTest->questionSet->questions->map(function ($question) {
             return [
