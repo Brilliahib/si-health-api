@@ -82,6 +82,10 @@ class PreTestController extends Controller
         $data = [
             'id' => $preTest->id,
             'name' => $preTest->name,
+            'submodule' => [
+                'id' => $postTest->subModule->id ?? null,
+                'name' => $postTest->subModule->name ?? null,
+            ],
             'question_set_id' => $preTest->question_set_id,
             'questions' => $questions,
         ];

@@ -86,6 +86,10 @@ class PostTestController extends Controller
         $data = [
             'id' => $postTest->id,
             'name' => $postTest->name,
+            'submodule' => [
+                'id' => $postTest->subModule->id ?? null,
+                'name' => $postTest->subModule->name ?? null,
+            ],
             'question_set_id' => $postTest->question_set_id,
             'questions' => $questions,
         ];
