@@ -181,6 +181,7 @@ Route::middleware('auth:api')->group(function () {
         // Question admin routes
         Route::post('/question', [QuestionController::class, 'store']);
         Route::put('/question/{id}', [QuestionController::class, 'update']);
+        Route::get('/question/{id}', [QuestionController::class, 'show']);
         Route::delete('/question/{id}', [QuestionController::class, 'destroy']);
 
         // Personal information routes
