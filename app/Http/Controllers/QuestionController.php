@@ -58,4 +58,14 @@ class QuestionController extends Controller
             'meta' => ['status' => 'success', 'message' => 'Question deleted'],
         ]);
     }
+
+    public function show($id)
+    {
+        $question = Question::with('options')->findOrFail($id);
+
+        return response()->json([
+            'meta' => ['status' => 'success', 'message' => 'Question retrieved'],
+            'data' => $question,
+        ]);
+    }
 }
