@@ -68,4 +68,46 @@ class QuestionController extends Controller
             'data' => $question,
         ]);
     }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'question_text' => 'required|string',
+            'options' => 'required|array|min:2',
+            'options.*.option_text' => 'required|string',
+            'options.*.score' => 'nullable|numeric',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $question = Question::findOrFail($id);
+
+            $question->update([
+                'question_text' => $request->question_text,
+            ]);
+
+            $question->options()->delete();
+
+            foreach ($request->options as $opt) {
+                Option::create([
+                    'question_id' => $question->id,
+                    'option_text' => $opt['option_text'],
+                    'score' => $opt['score'] ?? null,
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'meta' => ['status' => 'success', 'message' => 'Question updated'],
+                'data' => $question->load('options'),
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'meta' => ['status' => 'error', 'message' => $th->getMessage()],
+            ], 500);
+        }
+    }
 }
