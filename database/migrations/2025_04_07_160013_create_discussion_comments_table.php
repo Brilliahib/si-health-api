@@ -15,8 +15,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('discussion_id');
             $table->foreignUuid('user_id');
+            $table->foreignUuid('medical_id')->nullable();
             $table->text('comment');
             $table->string('image_path')->nullable();
+            $table->string('is_private')->default('false');
             $table->timestamps();
         });
     }
