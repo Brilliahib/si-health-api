@@ -54,6 +54,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/discussion/{id}', [DiscussionController::class, 'show']);
 
     // Discussion Comment routes
+    Route::get('/discussion/comment/{id}/me', [DiscussionCommentController::class, 'getMyDiscussionComments']);
     Route::get('/discussion/comment/{id}', [DiscussionCommentController::class, 'getByDiscussionId']);
     Route::get('/discussion/comment/detail/{id}', [DiscussionCommentController::class, 'show']);
     Route::post('/discussion/comment', [DiscussionCommentController::class, 'store']);

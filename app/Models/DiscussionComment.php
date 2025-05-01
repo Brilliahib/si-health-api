@@ -18,6 +18,12 @@ class DiscussionComment extends BaseModel
         return $this->belongsTo(User::class);
     }
 
+    public function medical()
+    {
+        return $this->belongsTo(User::class, 'medical_id')
+            ->where('role', 'medical_personal');
+    }
+
     public function answers()
     {
         return $this->hasMany(DiscussionCommentAnswer::class);

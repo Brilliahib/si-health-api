@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('patient_type');
             $table->string('disease_duration');
             $table->string('dialisis_duration');
+            $table->text('history_therapy');
             $table->timestamps();
         });
     }
