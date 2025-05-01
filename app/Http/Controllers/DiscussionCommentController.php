@@ -31,7 +31,7 @@ class DiscussionCommentController extends Controller
     {
         $user = Auth::user();
 
-        $comments = DiscussionComment::with('user')
+        $comments = DiscussionComment::with('user', 'discussion')
             ->where('user_id', $user->id)
             ->get();
 
