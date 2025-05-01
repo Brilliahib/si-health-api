@@ -27,12 +27,11 @@ class DiscussionCommentController extends Controller
         ]);
     }
 
-    public function getMyDiscussionComments($discussionId)
+    public function getMyDiscussionComments()
     {
         $user = Auth::user();
 
-        $comments = DiscussionComment::with('user')
-            ->where('discussion_id', $discussionId)
+        $comments = DiscussionComment::with('user', 'discussion')
             ->where('user_id', $user->id)
             ->get();
 
