@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DiscussionComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -11,7 +12,10 @@ class DiscussionCommentController extends Controller
 {
     public function getByDiscussionId($discussionId)
     {
-        $comments = DiscussionComment::with('user')->where('discussion_id', $discussionId)->get();
+        $comments = DiscussionComment::with('user')
+            ->where('discussion_id', $discussionId)
+            ->where('is_private', 0)
+            ->get();
 
         return response()->json([
             'meta' => [
@@ -23,12 +27,32 @@ class DiscussionCommentController extends Controller
         ]);
     }
 
+    public function getMyDiscussions()
+    {
+        $user = Auth::user();
+
+        $discussions = DiscussionComment::with('user')
+            ->where('user_id', $user->id)
+            ->get();
+
+        return response()->json([
+            'meta' => [
+                'status' => 'success',
+                'message' => 'User discussions retrieved successfully',
+                'statusCode' => 200,
+            ],
+            'data' => $discussions,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'discussion_id' => 'required|uuid|exists:discussions,id',
             'comment' => 'required|string',
             'image' => 'nullable|image|max:2048',
+            'medical_id' => 'nullable|uuid|exists:users,id',
+            'is_private' => 'nullable|boolean',
         ]);
 
         $imagePath = null;
@@ -40,6 +64,8 @@ class DiscussionCommentController extends Controller
             'id' => Str::uuid(),
             'discussion_id' => $request->discussion_id,
             'user_id' => auth()->id(),
+            'medical_id' => $request->medical_id,
+            'is_private' => $request->is_private ?? false,
             'comment' => $request->comment,
             'image_path' => $imagePath,
         ]);
