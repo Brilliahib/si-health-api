@@ -27,21 +27,22 @@ class DiscussionCommentController extends Controller
         ]);
     }
 
-    public function getMyDiscussions()
+    public function getMyDiscussionComments($discussionId)
     {
         $user = Auth::user();
 
-        $discussions = DiscussionComment::with('user')
+        $comments = DiscussionComment::with('user')
+            ->where('discussion_id', $discussionId)
             ->where('user_id', $user->id)
             ->get();
 
         return response()->json([
             'meta' => [
                 'status' => 'success',
-                'message' => 'User discussions retrieved successfully',
+                'message' => 'Your discussion comments retrieved successfully',
                 'statusCode' => 200,
             ],
-            'data' => $discussions,
+            'data' => $comments,
         ]);
     }
 
