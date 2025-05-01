@@ -38,6 +38,7 @@ class PersonalInformationController extends Controller
             'patient_type' => 'required|string|max:255',
             'disease_duration' => 'required|string|max:255',
             'dialisis_duration' => 'required|string|max:255',
+            'history_therapy' => 'required|string|max:255',
         ]);
 
         try {
@@ -55,6 +56,7 @@ class PersonalInformationController extends Controller
                 'patient_type' => $request->patient_type,
                 'disease_duration' => $request->disease_duration,
                 'dialisis_duration' => $request->dialisis_duration,
+                'history_therapy' => $request->history_therapy,
             ]);
 
             return response()->json([
@@ -117,6 +119,7 @@ class PersonalInformationController extends Controller
             'patient_type' => 'sometimes|string|max:255',
             'disease_duration' => 'sometimes|string|max:255',
             'dialisis_duration' => 'sometimes|string|max:255',
+            'history_therapy' => 'sometimes|string|max:255',
         ]);
 
         $personalInformation->update($request->all());
