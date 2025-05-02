@@ -5,6 +5,7 @@ use App\Http\Controllers\CAPDController;
 use App\Http\Controllers\DiscussionCommentAnswerController;
 use App\Http\Controllers\DiscussionCommentController;
 use App\Http\Controllers\DiscussionController;
+use App\Http\Controllers\FAQController;
 use App\Http\Controllers\HDController;
 use App\Http\Controllers\ModuleContentController;
 use App\Http\Controllers\ModuleController;
@@ -143,6 +144,12 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::middleware(['role:admin'])->group(function () {
+        // FAQ admin routes
+        Route::get('/faqs', [FAQController::class, 'index']);
+        Route::post('/faqs', [FAQController::class, 'store']);
+        Route::put('/faqs/{id}', [FAQController::class, 'update']);
+        Route::delete('/faqs/{id}', [FAQController::class, 'destroy']);
+
         // Module admin routes
         Route::post('/modules', [ModuleController::class, 'store']);
         Route::put('/modules/{id}', [ModuleController::class, 'update']);
