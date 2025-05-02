@@ -63,7 +63,15 @@ class PreTestController extends Controller
 
     public function show($id)
     {
-        $preTest = PreTest::with('questionSet.questions.options', 'subModule.module')->findOrFail($id);
+        $preTest = PreTest::with([
+            'questionSet.questions' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            },
+            'questionSet.questions.options' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            },
+            'subModule.module'
+        ])->findOrFail($id);
 
         $questions = $preTest->questionSet->questions->map(function ($question) {
             return [
@@ -99,6 +107,7 @@ class PreTestController extends Controller
             'data' => $data,
         ]);
     }
+
 
     public function update(Request $request, $id)
     {
