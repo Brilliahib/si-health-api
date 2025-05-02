@@ -38,6 +38,20 @@ class UserController extends Controller
         ], 201);
     }
 
+    public function getMedicalPersonals()
+    {
+        $users = User::where('role', 'medical_personal')->get();
+
+        return response()->json([
+            'meta' => [
+                'status' => 'success',
+                'message' => 'Daftar user dengan role medical_personal berhasil diambil',
+                'statusCode' => 200
+            ],
+            'data' => $users
+        ]);
+    }
+
     public function show($id)
     {
         $user = User::with('historyScreening.screening')->find($id);
