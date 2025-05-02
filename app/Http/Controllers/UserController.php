@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -49,6 +50,34 @@ class UserController extends Controller
                 'statusCode' => 200
             ],
             'data' => $users
+        ]);
+    }
+
+    public function resetPassword($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'meta' => [
+                    'status' => 'error',
+                    'message' => 'User tidak ditemukan',
+                    'statusCode' => 404
+                ],
+                'data' => null
+            ], 404);
+        }
+
+        $user->password = Hash::make('12345');
+        $user->save();
+
+        return response()->json([
+            'meta' => [
+                'status' => 'success',
+                'message' => 'Password berhasil direset menjadi 12345',
+                'statusCode' => 200
+            ],
+            'data' => $user
         ]);
     }
 

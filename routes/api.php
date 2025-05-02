@@ -211,7 +211,10 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/post-test', [UserHistoryPostTestController::class, 'getAllHistory']);
             Route::get('/post-test/users/{postTestId}', [UserHistoryPostTestController::class, 'getByPostTestId']);
         });
+
         // Users admin routes
         Route::apiResource('users', UserController::class);
+
+        Route::post('/users/{id}/reset-password', [UserController::class, 'resetPassword']);
     });
 });
