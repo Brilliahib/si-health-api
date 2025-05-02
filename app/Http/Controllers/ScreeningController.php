@@ -51,7 +51,14 @@ class ScreeningController extends Controller
 
     public function show($id)
     {
-        $screening = Screening::with('questionSet.questions.options')->findOrFail($id);
+        $screening = Screening::with([
+            'questionSet.questions' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            },
+            'questionSet.questions.options' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            },
+        ])->findOrFail($id);
 
         $questions = $screening->questionSet->questions->map(function ($question) {
             return [
@@ -80,6 +87,7 @@ class ScreeningController extends Controller
             ],
         ]);
     }
+
 
     public function update(Request $request, $id)
     {

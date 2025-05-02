@@ -67,7 +67,15 @@ class PostTestController extends Controller
 
     public function show($id)
     {
-        $postTest = PostTest::with('questionSet.questions.options', 'subModule.module')->findOrFail($id);
+        $postTest = PostTest::with([
+            'questionSet.questions' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            },
+            'questionSet.questions.options' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            },
+            'subModule.module'
+        ])->findOrFail($id);
 
         $questions = $postTest->questionSet->questions->map(function ($question) {
             return [
@@ -103,6 +111,7 @@ class PostTestController extends Controller
             'data' => $data,
         ]);
     }
+
 
     public function update(Request $request, $id)
     {
