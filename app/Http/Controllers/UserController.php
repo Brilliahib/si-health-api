@@ -68,13 +68,13 @@ class UserController extends Controller
             ], 404);
         }
 
-        $user->password = Hash::make('12345');
+        $user->password = Hash::make('password');
         $user->save();
 
         return response()->json([
             'meta' => [
                 'status' => 'success',
-                'message' => 'Password berhasil direset menjadi 12345',
+                'message' => 'Password berhasil direset menjadi password',
                 'statusCode' => 200
             ],
             'data' => $user
