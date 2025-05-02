@@ -44,6 +44,9 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/auth/change-password', [AuthController::class, 'changePassword']);
     Route::put('/auth/update-account', [AuthController::class, 'updateAccount']);
 
+    // Get medical personal users
+    Route::get('/users/medical-personal', [UserController::class, 'getMedicalPersonals']);
+
     Route::get('/modules', [ModuleController::class, 'index']);
     Route::get('/modules/users', [ModuleController::class, 'getAllModuleUsers']);
     Route::get('/modules/type', [ModuleController::class, 'getByType']);
