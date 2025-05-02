@@ -68,7 +68,7 @@ class UserController extends Controller
             ], 404);
         }
 
-        $user->password = Hash::make(12345);
+        $user->password = Hash::make('12345');
         $user->save();
 
         return response()->json([
