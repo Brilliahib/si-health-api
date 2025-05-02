@@ -67,16 +67,17 @@ class PreTestController extends Controller
             'questionSet.questions' => function ($query) {
                 $query->orderBy('created_at', 'asc');
             },
+            'questionSet.questions.options' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            },
             'subModule.module'
         ])->findOrFail($id);
 
         $questions = $preTest->questionSet->questions->map(function ($question) {
-            $orderedOptions = $question->options()->orderBy('created_at', 'asc')->get();
-
             return [
                 'id' => $question->id,
                 'question_text' => $question->question_text,
-                'options' => $orderedOptions->map(function ($option) {
+                'options' => $question->options->map(function ($option) {
                     return [
                         'id' => $option->id,
                         'option_text' => $option->option_text,
@@ -106,7 +107,6 @@ class PreTestController extends Controller
             'data' => $data,
         ]);
     }
-
 
     public function update(Request $request, $id)
     {
