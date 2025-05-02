@@ -55,7 +55,8 @@ class UserHistoryPreTestController extends Controller
 
     public function show($id)
     {
-        $history = UserHistoryPreTest::with(['user', 'answer.question.options', 'answer.selectedOption'])
+
+        $history = UserHistoryPreTest::with(['user', 'answer.question.options', 'answer.selectedOption',])
             ->where('id', $id)
             ->first();
 
@@ -65,17 +66,13 @@ class UserHistoryPreTestController extends Controller
             ], 404);
         }
 
-        $answers = $history->answer
-            ->sortBy(fn($answer) => $answer->question->created_at)
-            ->values();
-
         return response()->json([
             'message' => 'Berhasil mengambil detail history pre test',
             'data' => [
                 'id' => $history->id,
                 'sum_score' => $history->sum_score,
                 'created_at' => $history->created_at,
-                'answer' => $answers->map(function ($answer) {
+                'answer' => $history->answer->map(function ($answer) {
                     return [
                         'id' => $answer->question->id,
                         'question' => $answer->question->question_text,
@@ -87,7 +84,7 @@ class UserHistoryPreTestController extends Controller
                         'selected_option' => [
                             'id' => $answer->selectedOption?->id,
                             'text' => $answer->selectedOption?->option_text,
-                            'score' => $answer->selectedOption?->score,
+                            'score' => $answer->selectionOption?->score,
                         ],
                     ];
                 }),
