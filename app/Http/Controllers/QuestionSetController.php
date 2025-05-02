@@ -37,18 +37,20 @@ class QuestionSetController extends Controller
     {
         $set = QuestionSet::with(['questions.options'])->findOrFail($id);
 
-        $questions = $set->questions->map(function ($question) {
-            return [
-                'id' => $question->id,
-                'question_text' => $question->question_text,
-                'options' => $question->options->map(function ($option) {
-                    return [
-                        'id' => $option->id,
-                        'option_text' => $option->option_text,
-                    ];
-                }),
-            ];
-        });
+        $questions = $set->questions
+            ->sortBy('created_at')
+            ->map(function ($question) {
+                return [
+                    'id' => $question->id,
+                    'question_text' => $question->question_text,
+                    'options' => $question->options->map(function ($option) {
+                        return [
+                            'id' => $option->id,
+                            'option_text' => $option->option_text,
+                        ];
+                    }),
+                ];
+            })->values();
 
         return response()->json([
             'meta' => [
@@ -63,6 +65,7 @@ class QuestionSetController extends Controller
             ],
         ]);
     }
+
 
     public function destroy($id)
     {
