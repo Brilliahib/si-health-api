@@ -45,6 +45,9 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/auth/change-password', [AuthController::class, 'changePassword']);
     Route::put('/auth/update-account', [AuthController::class, 'updateAccount']);
 
+    // Get FAQ for users
+    Route::get('/faqs', [FAQController::class, 'index']);
+
     // Get medical personal users
     Route::get('/users/medical-personal', [UserController::class, 'getMedicalPersonals']);
 
@@ -145,7 +148,6 @@ Route::middleware('auth:api')->group(function () {
 
     Route::middleware(['role:admin'])->group(function () {
         // FAQ admin routes
-        Route::get('/faqs', [FAQController::class, 'index']);
         Route::post('/faqs', [FAQController::class, 'store']);
         Route::put('/faqs/{id}', [FAQController::class, 'update']);
         Route::delete('/faqs/{id}', [FAQController::class, 'destroy']);
@@ -209,7 +211,10 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/post-test', [UserHistoryPostTestController::class, 'getAllHistory']);
             Route::get('/post-test/users/{postTestId}', [UserHistoryPostTestController::class, 'getByPostTestId']);
         });
+
         // Users admin routes
         Route::apiResource('users', UserController::class);
+
+        Route::post('/users/{id}/reset-password', [UserController::class, 'resetPassword']);
     });
 });
