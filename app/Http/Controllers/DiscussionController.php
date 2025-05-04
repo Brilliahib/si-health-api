@@ -119,7 +119,7 @@ class DiscussionController extends Controller
 
     public function show($id)
     {
-        $discussion = Discussion::with(['comments.user', 'comments.answers'])->findOrFail($id);
+        $discussion = Discussion::with(['comments.user', 'comments.answers.user'])->findOrFail($id);
 
         $formatted = [
             'id' => $discussion->id,
@@ -128,7 +128,11 @@ class DiscussionController extends Controller
             'updated_at' => $discussion->updated_at,
             'comments' => $discussion->comments
                 ->filter(function ($comment) {
-                    return $comment->is_private === 0 || $comment->user_id === auth()->id();
+                    if ($comment->is_private == 0) {
+                        return true;
+                    }
+
+                    return $comment->user_id === auth()->id();
                 })
                 ->sortByDesc('created_at')
                 ->values()
@@ -168,6 +172,7 @@ class DiscussionController extends Controller
             'data' => $formatted,
         ]);
     }
+
 
     public function showPrivateDiscussions()
     {
