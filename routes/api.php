@@ -59,6 +59,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/discussion', [DiscussionController::class, 'index']);
     Route::post('/discussion', [DiscussionController::class, 'store']);
+    Route::get('/discussion/private', [DiscussionController::class, 'showPrivateDiscussions']);
     Route::get('/discussion/{id}', [DiscussionController::class, 'show']);
 
     // Discussion Comment routes
