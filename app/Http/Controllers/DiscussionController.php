@@ -71,48 +71,42 @@ class DiscussionController extends Controller
     {
         $discussion = Discussion::with(['comments.user', 'comments.answers'])->findOrFail($id);
 
-        if (!$discussion) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'Discussion not found',
-                    'statusCode' => 404,
-                ],
-                'data' => null,
-            ], 404);
-        }
-
-        // Format the response
         $formatted = [
             'id' => $discussion->id,
             'title' => $discussion->title,
             'created_at' => $discussion->created_at,
             'updated_at' => $discussion->updated_at,
-            'comments' => $discussion->comments->sortByDesc('created_at')->values()->map(function ($comment) {
-                return [
-                    'id' => $comment->id,
-                    'comment' => $comment->comment,
-                    'image_path' => $comment->image_path,
-                    'created_at' => $comment->created_at,
-                    'updated_at' => $comment->updated_at,
-                    'user' => [
-                        'id' => $comment->user->id,
-                        'name' => $comment->user->name,
-                    ],
-                    'answers' => $comment->answers->map(function ($answer) {
-                        return [
-                            'id' => $answer->id,
-                            'comment' => $answer->comment,
-                            'image_path' => $answer->image_path,
-                            'created_at' => $answer->created_at,
-                            'user' => [
-                                'id' => $answer->user->id,
-                                'name' => $answer->user->name,
-                            ],
-                        ];
-                    }),
-                ];
-            }),
+            'comments' => $discussion->comments
+                ->filter(function ($comment) {
+                    return $comment->is_private === 0 || $comment->user_id === auth()->id();
+                })
+                ->sortByDesc('created_at')
+                ->values()
+                ->map(function ($comment) {
+                    return [
+                        'id' => $comment->id,
+                        'comment' => $comment->comment,
+                        'image_path' => $comment->image_path,
+                        'created_at' => $comment->created_at,
+                        'updated_at' => $comment->updated_at,
+                        'user' => [
+                            'id' => $comment->user->id,
+                            'name' => $comment->user->name,
+                        ],
+                        'answers' => $comment->answers->map(function ($answer) {
+                            return [
+                                'id' => $answer->id,
+                                'comment' => $answer->comment,
+                                'image_path' => $answer->image_path,
+                                'created_at' => $answer->created_at,
+                                'user' => [
+                                    'id' => $answer->user->id,
+                                    'name' => $answer->user->name,
+                                ],
+                            ];
+                        }),
+                    ];
+                }),
         ];
 
         return response()->json([
@@ -124,6 +118,55 @@ class DiscussionController extends Controller
             'data' => $formatted,
         ]);
     }
+
+    public function showPrivateDiscussions()
+    {
+        $userId = auth()->id();
+
+        $comments = \App\Models\DiscussionComment::with(['user', 'answers'])
+            ->where('is_private', 1)
+            ->where('medical_id', $userId)
+            ->latest()
+            ->get();
+
+        $formatted = $comments->map(function ($comment) {
+            return [
+                'id' => $comment->id,
+                'comment' => $comment->comment,
+                'image_path' => $comment->image_path,
+                'created_at' => $comment->created_at,
+                'updated_at' => $comment->updated_at,
+                'discussion_id' => $comment->discussion_id,
+                'user' => [
+                    'id' => $comment->user->id,
+                    'name' => $comment->user->name,
+                ],
+                'answers' => $comment->answers->map(function ($answer) {
+                    return [
+                        'id' => $answer->id,
+                        'comment' => $answer->comment,
+                        'image_path' => $answer->image_path,
+                        'created_at' => $answer->created_at,
+                        'user' => [
+                            'id' => $answer->user->id,
+                            'name' => $answer->user->name,
+                        ],
+                    ];
+                }),
+            ];
+        });
+
+        return response()->json([
+            'meta' => [
+                'status' => 'success',
+                'message' => 'Private discussion comments retrieved successfully',
+                'statusCode' => 200,
+            ],
+            'data' => $formatted,
+        ]);
+    }
+
+
 
     public function update(Request $request, $id)
     {
