@@ -78,8 +78,7 @@ class DiscussionController extends Controller
             'updated_at' => $discussion->updated_at,
             'comments' => $discussion->comments
                 ->filter(function ($comment) {
-                    $isAdmin = auth()->user()->role === 'admin';
-                    return $isAdmin || $comment->is_private === 0 || $comment->user_id === auth()->id();
+                    return $comment->is_private === 0 || $comment->user_id === auth()->id();
                 })
                 ->sortByDesc('created_at')
                 ->values()
@@ -166,8 +165,6 @@ class DiscussionController extends Controller
             'data' => $formatted,
         ]);
     }
-
-
 
     public function update(Request $request, $id)
     {
