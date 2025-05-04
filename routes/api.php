@@ -46,6 +46,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/auth/update-account', [AuthController::class, 'updateAccount']);
 
     // Get FAQ for users
+    Route::get('/faqs/{id}', [FAQController::class, 'show']);
     Route::get('/faqs', [FAQController::class, 'index']);
 
     // Get medical personal users
