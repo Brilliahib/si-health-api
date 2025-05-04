@@ -78,8 +78,7 @@ class DiscussionController extends Controller
             'updated_at' => $discussion->updated_at,
             'comments' => $discussion->comments
                 ->filter(function ($comment) {
-                    $isAdmin = auth()->user()->role === 'admin';
-                    return $isAdmin || $comment->is_private === 0 || $comment->user_id === auth()->id();
+                    return $comment->is_private === 0 || $comment->user_id === auth()->id();
                 })
                 ->sortByDesc('created_at')
                 ->values()
@@ -122,13 +121,16 @@ class DiscussionController extends Controller
 
     public function showPrivateDiscussions()
     {
-        $userId = auth()->id();
+        $user = auth()->user();
 
-        $comments = \App\Models\DiscussionComment::with(['user', 'answers'])
-            ->where('is_private', 1)
-            ->where('medical_id', $userId)
-            ->latest()
-            ->get();
+        $query = \App\Models\DiscussionComment::with(['user', 'answers'])
+            ->where('is_private', 1);
+
+        if ($user->role !== 'admin') {
+            $query->where('medical_id', $user->id);
+        }
+
+        $comments = $query->latest()->get();
 
         $formatted = $comments->map(function ($comment) {
             return [
@@ -141,6 +143,7 @@ class DiscussionController extends Controller
                 'user' => [
                     'id' => $comment->user->id,
                     'name' => $comment->user->name,
+                    'role' => $comment->user->role, // tambahkan kalau perlu tampilkan
                 ],
                 'answers' => $comment->answers->map(function ($answer) {
                     return [
@@ -151,6 +154,7 @@ class DiscussionController extends Controller
                         'user' => [
                             'id' => $answer->user->id,
                             'name' => $answer->user->name,
+                            'role' => $answer->user->role ?? null,
                         ],
                     ];
                 }),
@@ -166,8 +170,6 @@ class DiscussionController extends Controller
             'data' => $formatted,
         ]);
     }
-
-
 
     public function update(Request $request, $id)
     {
