@@ -83,4 +83,18 @@ class FAQController extends Controller
             'data' => null,
         ]);
     }
+
+    public function show($id)
+    {
+        $faq = FAQ::findOrFail($id);
+
+        return response()->json([
+            'meta' => [
+                'status' => 'success',
+                'message' => 'FAQ detail retrieved successfully',
+                'statusCode' => 200,
+            ],
+            'data' => $faq,
+        ]);
+    }
 }
