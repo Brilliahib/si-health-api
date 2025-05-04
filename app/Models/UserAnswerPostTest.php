@@ -21,6 +21,6 @@ class UserAnswerPostTest extends BaseModel
 
     public function question()
     {
-        return $this->belongsTo(Question::class, 'question_id');
+        return $this->belongsTo(Question::class, 'question_id')->orderBy('created_at', 'asc');
     }
 }

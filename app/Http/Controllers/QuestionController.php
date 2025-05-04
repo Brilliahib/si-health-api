@@ -17,6 +17,7 @@ class QuestionController extends Controller
             'options' => 'required|array|min:2',
             'options.*.option_text' => 'required|string',
             'options.*.score' => 'nullable|numeric',
+            'options.*.option_index' => 'required|integer',
         ]);
 
         DB::beginTransaction();
@@ -25,12 +26,14 @@ class QuestionController extends Controller
             $question = Question::create([
                 'question_set_id' => $request->question_set_id,
                 'question_text' => $request->question_text,
+
             ]);
 
             foreach ($request->options as $opt) {
                 Option::create([
                     'question_id' => $question->id,
                     'option_text' => $opt['option_text'],
+                    'option_index' => $opt['option_index'],
                     'score' => $opt['score'] ?? null,
                 ]);
             }
@@ -61,7 +64,9 @@ class QuestionController extends Controller
 
     public function show($id)
     {
-        $question = Question::with('options')->findOrFail($id);
+        $question = Question::with(['options' => function ($query) {
+            $query->orderBy('option_index', 'asc');
+        }])->findOrFail($id);
 
         return response()->json([
             'meta' => ['status' => 'success', 'message' => 'Question retrieved'],
@@ -74,6 +79,7 @@ class QuestionController extends Controller
         $request->validate([
             'question_text' => 'required|string',
             'options' => 'required|array|min:2',
+            'options.*option_index' => 'required|integer',
             'options.*.option_text' => 'required|string',
             'options.*.score' => 'nullable|numeric',
         ]);
@@ -93,6 +99,7 @@ class QuestionController extends Controller
                 Option::create([
                     'question_id' => $question->id,
                     'option_text' => $opt['option_text'],
+                    'option_index' => $opt['option_index'],
                     'score' => $opt['score'] ?? null,
                 ]);
             }

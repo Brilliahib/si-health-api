@@ -72,7 +72,7 @@ class PostTestController extends Controller
                 $query->orderBy('created_at', 'asc');
             },
             'questionSet.questions.options' => function ($query) {
-                $query->orderBy('created_at', 'asc');
+                $query->orderBy('option_index', 'asc');
             },
             'subModule.module'
         ])->findOrFail($id);
