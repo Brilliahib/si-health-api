@@ -160,6 +160,7 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
 
         // Discussion admin routes
+        Route::get('/discussion/admin/{id}', [DiscussionController::class, 'showForAdmin']);
         Route::put('/discussion/{id}', [DiscussionController::class, 'update']);
         Route::delete('/discussion/{id}', [DiscussionController::class, 'destroy']);
 

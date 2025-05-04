@@ -67,6 +67,56 @@ class DiscussionController extends Controller
         ], 201);
     }
 
+    public function showForAdmin($id)
+    {
+        $discussion = Discussion::with(['comments.user', 'comments.answers'])->findOrFail($id);
+
+        $formatted = [
+            'id' => $discussion->id,
+            'title' => $discussion->title,
+            'created_at' => $discussion->created_at,
+            'updated_at' => $discussion->updated_at,
+            'comments' => $discussion->comments
+                ->sortByDesc('created_at')
+                ->values()
+                ->map(function ($comment) {
+                    return [
+                        'id' => $comment->id,
+                        'comment' => $comment->comment,
+                        'is_private' => $comment->is_private,
+                        'image_path' => $comment->image_path,
+                        'created_at' => $comment->created_at,
+                        'updated_at' => $comment->updated_at,
+                        'user' => [
+                            'id' => $comment->user->id,
+                            'name' => $comment->user->name,
+                        ],
+                        'answers' => $comment->answers->map(function ($answer) {
+                            return [
+                                'id' => $answer->id,
+                                'comment' => $answer->comment,
+                                'image_path' => $answer->image_path,
+                                'created_at' => $answer->created_at,
+                                'user' => [
+                                    'id' => $answer->user->id,
+                                    'name' => $answer->user->name,
+                                ],
+                            ];
+                        }),
+                    ];
+                }),
+        ];
+
+        return response()->json([
+            'meta' => [
+                'status' => 'success',
+                'message' => 'Discussion details retrieved for admin successfully',
+                'statusCode' => 200,
+            ],
+            'data' => $formatted,
+        ]);
+    }
+
     public function show($id)
     {
         $discussion = Discussion::with(['comments.user', 'comments.answers'])->findOrFail($id);
