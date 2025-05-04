@@ -121,16 +121,13 @@ class DiscussionController extends Controller
 
     public function showPrivateDiscussions()
     {
-        $user = auth()->user();
+        $userId = auth()->id();
 
-        $query = \App\Models\DiscussionComment::with(['user', 'answers'])
-            ->where('is_private', 1);
-
-        if ($user->role !== 'admin') {
-            $query->where('medical_id', $user->id);
-        }
-
-        $comments = $query->latest()->get();
+        $comments = \App\Models\DiscussionComment::with(['user', 'answers'])
+            ->where('is_private', 1)
+            ->where('medical_id', $userId)
+            ->latest()
+            ->get();
 
         $formatted = $comments->map(function ($comment) {
             return [
@@ -143,7 +140,6 @@ class DiscussionController extends Controller
                 'user' => [
                     'id' => $comment->user->id,
                     'name' => $comment->user->name,
-                    'role' => $comment->user->role, // tambahkan kalau perlu tampilkan
                 ],
                 'answers' => $comment->answers->map(function ($answer) {
                     return [
@@ -154,7 +150,6 @@ class DiscussionController extends Controller
                         'user' => [
                             'id' => $answer->user->id,
                             'name' => $answer->user->name,
-                            'role' => $answer->user->role ?? null,
                         ],
                     ];
                 }),
