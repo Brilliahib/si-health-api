@@ -56,8 +56,9 @@ class ScreeningController extends Controller
                 $query->orderBy('created_at', 'asc');
             },
             'questionSet.questions.options' => function ($query) {
-                $query->orderBy('created_at', 'asc');
-            },
+                $query->orderBy('option_index', 'asc');
+            }
+
         ])->findOrFail($id);
 
         $questions = $screening->questionSet->questions->map(function ($question) {

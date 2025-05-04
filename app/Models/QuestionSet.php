@@ -21,7 +21,7 @@ class QuestionSet extends BaseModel
 
     public function questions()
     {
-        return $this->hasMany(Question::class);
+        return $this->hasMany(Question::class)->orderBy('created_at', 'asc');
     }
 
     public function screenings()

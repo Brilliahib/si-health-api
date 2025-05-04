@@ -23,7 +23,15 @@ class UserHistoryScreeningController extends Controller
 
     public function getByScreeningId($screeningId)
     {
-        $histories = UserHistoryScreening::with(['user', 'screening'])
+        $histories = UserHistoryScreening::with([
+            'user',
+            'screening.questionSet.questions' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            },
+            'screening.questionSet.questions.options' => function ($query) {
+                $query->orderBy('option_index', 'asc');
+            },
+        ])
             ->where('screening_id', $screeningId)
             ->orderBy('created_at', 'desc')
             ->get();

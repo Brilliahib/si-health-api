@@ -47,6 +47,7 @@ class QuestionSetController extends Controller
                         return [
                             'id' => $option->id,
                             'option_text' => $option->option_text,
+                            'option_index' => $option->option_index,
                         ];
                     }),
                 ];
