@@ -113,12 +113,12 @@ class PreTestController extends Controller
         $preTest = PreTest::findOrFail($id);
 
         $request->validate([
-            'title' => 'sometimes|string',
+            'name' => 'sometimes|string',
             'sub_module_id' => 'sometimes|exists:sub_modules,id',
             'question_set_id' => 'sometimes|exists:question_sets,id',
         ]);
 
-        $preTest->update($request->only(['title', 'sub_module_id', 'question_set_id']));
+        $preTest->update($request->only(['name', 'sub_module_id', 'question_set_id']));
 
         return response()->json([
             'meta' => ['status' => 'success', 'message' => 'PreTest updated'],
