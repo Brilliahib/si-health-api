@@ -94,7 +94,7 @@ class SubModuleController extends Controller
             return response()->json([
                 'meta' => [
                     'status' => 'error',
-                    'message' => 'Module not found',
+                    'message' => 'Sub Module not found',
                     'statusCode' => 404,
                 ],
                 'data' => null,
@@ -102,17 +102,21 @@ class SubModuleController extends Controller
         }
 
         $validated = $request->validate([
+            'module_id' => 'required|uuid|exists:modules,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'type' => 'required|in:hd,capd',
         ]);
 
-        $subModule->update($validated);
+        $subModule->update([
+            'module_id' => $validated['module_id'],
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+        ]);
 
         return response()->json([
             'meta' => [
                 'status' => 'success',
-                'message' => 'Module updated successfully',
+                'message' => 'Sub Module updated successfully',
                 'statusCode' => 200,
             ],
             'data' => $subModule,
