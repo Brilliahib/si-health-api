@@ -95,4 +95,21 @@ class UserHistoryPreTestController extends Controller
             ],
         ]);
     }
+
+    public function destroy($id)
+    {
+        $history = UserHistoryPreTest::find($id);
+
+        if (!$history) {
+            return response()->json([
+                'message' => 'History pre test tidak ditemukan',
+            ], 404);
+        }
+
+        $history->delete();
+
+        return response()->json([
+            'message' => 'History pre test berhasil dihapus',
+        ]);
+    }
 }

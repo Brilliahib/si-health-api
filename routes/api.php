@@ -209,10 +209,13 @@ Route::middleware('auth:api')->group(function () {
         Route::prefix('history')->group(function () {
             Route::get('/screening', [UserHistoryScreeningController::class, 'getAllHistory']);
             Route::get('/screening/users/{screeningId}', [UserHistoryScreeningController::class, 'getByScreeningId']);
+            Route::delete('/screening/users/history/{id}', [UserHistoryScreeningController::class, 'destroy']);
             Route::get('/pre-test', [UserHistoryPreTestController::class, 'getAllHistory']);
             Route::get('/pre-test/users/{preTestId}', [UserHistoryPreTestController::class, 'getByPreTestId']);
+            Route::delete('/pre-test/users/history/{id}', [UserHistoryPreTestController::class, 'destroy']);
             Route::get('/post-test', [UserHistoryPostTestController::class, 'getAllHistory']);
             Route::get('/post-test/users/{postTestId}', [UserHistoryPostTestController::class, 'getByPostTestId']);
+            Route::delete('/post-test/users/history/{id}', [UserHistoryPostTestController::class, 'destroy']);
         });
 
         // Users admin routes
