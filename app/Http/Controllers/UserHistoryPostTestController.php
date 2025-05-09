@@ -95,4 +95,21 @@ class UserHistoryPostTestController extends Controller
             ],
         ]);
     }
+
+    public function destroy($id)
+    {
+        $history = UserHistoryPostTest::find($id);
+
+        if (!$history) {
+            return response()->json([
+                'message' => 'History post test tidak ditemukan',
+            ], 404);
+        }
+
+        $history->delete();
+
+        return response()->json([
+            'message' => 'History post test berhasil dihapus',
+        ]);
+    }
 }

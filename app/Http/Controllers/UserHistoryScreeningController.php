@@ -100,4 +100,21 @@ class UserHistoryScreeningController extends Controller
             ],
         ]);
     }
+
+    public function destroy($id)
+    {
+        $history = UserHistoryScreening::find($id);
+
+        if (!$history) {
+            return response()->json([
+                'message' => 'History screening tidak ditemukan',
+            ], 404);
+        }
+
+        $history->delete();
+
+        return response()->json([
+            'message' => 'History screening berhasil dihapus',
+        ]);
+    }
 }
