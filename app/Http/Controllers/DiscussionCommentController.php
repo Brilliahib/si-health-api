@@ -95,16 +95,16 @@ class DiscussionCommentController extends Controller
             ], 404);
         }
 
-        if ($comment->user_id !== auth()->id()) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'Unauthorized to delete this comment',
-                    'statusCode' => 403,
-                ],
-                'data' => null,
-            ], 403);
-        }
+        // if ($comment->user_id !== auth()->id()) {
+        //     return response()->json([
+        //         'meta' => [
+        //             'status' => 'error',
+        //             'message' => 'Unauthorized to delete this comment',
+        //             'statusCode' => 403,
+        //         ],
+        //         'data' => null,
+        //     ], 403);
+        // }
 
         if ($comment->image_path && Storage::disk('public')->exists($comment->image_path)) {
             Storage::disk('public')->delete($comment->image_path);
