@@ -77,4 +77,25 @@ class QuestionSetController extends Controller
             'meta' => ['status' => 'success', 'message' => 'QuestionSet deleted'],
         ]);
     }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        $set = QuestionSet::findOrFail($id);
+
+        $set->update([
+            'name' => $request->name,
+        ]);
+
+        return response()->json([
+            'meta' => [
+                'status' => 'success',
+                'message' => 'QuestionSet updated',
+            ],
+            'data' => $set,
+        ]);
+    }
 }
